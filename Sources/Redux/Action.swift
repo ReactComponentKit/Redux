@@ -13,10 +13,10 @@ public protocol Action {
 }
 
 extension Action {
-    var middlewares: [Middleware] {
+    public var middlewares: [Middleware] {
         return []
     }
-    var reducers: [Reducer] {
+    public var reducers: [Reducer] {
         return []
     }
 }
