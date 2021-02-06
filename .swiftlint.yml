@@ -212,6 +212,11 @@ disabled_rules: # rule identifiers to exclude from running
   # 비활성 SwiftUI 클로저에 맞지 않음
   - multiple_closures_with_trailing_closure
 
+  # Rationale: Encourages usage of assertion failures and thinking about what you are returning
+  # https://github.com/realm/SwiftLint/blob/master/Rules.md#conditional-returns-on-newline
+  # 비활성 guard let 이 한 줄 일 때, 어색함.
+  - conditional_returns_on_newline
+
 opt_in_rules: # some rules are only opt-in
 
   # Rationale: When using map, we think of it being used to transform a current array into something else
@@ -253,10 +258,6 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: Provides consistency in coding style
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#compiler-protocol-init
   - compiler_protocol_init
-
-  # Rationale: Encourages usage of assertion failures and thinking about what you are returning
-  # https://github.com/realm/SwiftLint/blob/master/Rules.md#conditional-returns-on-newline
-  - conditional_returns_on_newline
 
   # Rationale: A more clear and consise way to check if something exists
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#contains_over_filter_count

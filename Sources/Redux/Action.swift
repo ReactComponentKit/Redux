@@ -2,7 +2,7 @@
 //  Action.swift
 //  ReduxApp
 //
-//  Created by burt on 2021/02/04.
+//  Created by sungcheol.kim on 2021/02/04.
 //
 
 import Foundation
@@ -19,4 +19,9 @@ extension Action {
     public var reducers: [Reducer] {
         return []
     }
+}
+
+// Return this action in beforePrcessingAction function
+// if you need to cancel the current action.
+public struct CancelAction: Action {
 }
