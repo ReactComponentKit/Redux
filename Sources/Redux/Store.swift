@@ -16,7 +16,7 @@ open class Store<S: State>: ObservableObject {
     
     private var actions = PassthroughSubject<Action, Never>()
     private var actionQueue: [Action] = []
-    let actionQueueMutex = DispatchSemaphore(value: 1)
+    private let actionQueueMutex = DispatchSemaphore(value: 1)
     public init(state: S = S()) {
         self.state = state
         self.processActions()
@@ -46,6 +46,7 @@ open class Store<S: State>: ObservableObject {
     
     private func processActions() {
         actions
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
                 let currentAction = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action)
