@@ -45,7 +45,11 @@ open class Store<S: State>: ObservableObject {
     private func enqueueAction(action: Action) {
         actionQueueMutex.wait()
         defer { actionQueueMutex.signal() }
-        actionQueue.append(action)
+        if actionQueue.isEmpty {
+            actions.send(action)
+        } else {
+            actionQueue.append(action)
+        }
     }
     
     private func processActions() {
