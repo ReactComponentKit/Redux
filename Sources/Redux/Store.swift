@@ -9,24 +9,24 @@ import Foundation
 import Combine
 
 open class Store<S: State>: ObservableObject {
-    private var cancellable: Set<AnyCancellable> = Set()
-    
     @Published
     public private(set) var state: S
     
     private var actions = PassthroughSubject<Action, Never>()
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
+    private var cancellable: Set<AnyCancellable> = Set()
+    
+    private var actionJobMap: [String: Job<S>] = [:]
+    
     public init(state: S = S()) {
         self.state = state
         self.processActions()
+        self.registerJobs()
     }
     
     public func dispatch(action: Action) {
-        DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.actions.send(action)
-        }
+        actions.send(action)
     }
     
     open func beforeProcessingAction(state: S, action: Action) -> Action {
@@ -38,6 +38,10 @@ open class Store<S: State>: ObservableObject {
         // Override this function if need some job after processing action.
     }
     
+    open func registerJobs() {
+        // 
+    }
+    
     private func enqueueAction(action: Action) {
         actionQueueMutex.wait()
         defer { actionQueueMutex.signal() }
@@ -46,6 +50,7 @@ open class Store<S: State>: ObservableObject {
     
     private func processActions() {
         actions
+            .subscribe(on: DispatchQueue.global())
             .receive(on: DispatchQueue.main)
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
@@ -57,8 +62,16 @@ open class Store<S: State>: ObservableObject {
             .store(in: &cancellable)
     }
     
+    public func process(action: Action.Type, job: () -> Job<S>) {
+        let job = job()
+        let actionName = "\(action)"
+        self.actionJobMap[actionName] = job
+    }
+    
     public func processMiddlewares(action: Action) {
-        action.middlewares.publisher
+        let actionName = "\(type(of: action))"
+        guard let job = self.actionJobMap[actionName] else { return }
+        job.middlewares.publisher
             .subscribe(on: DispatchQueue.global())
             .tryReduce(state, { [weak self] s, m in
                 guard let strongSelf = self else { return s }
@@ -81,16 +94,19 @@ open class Store<S: State>: ObservableObject {
     }
     
     private func processReducers(action: Action) {
-        action.reducers.publisher
+        let actionName = "\(type(of: action))"
+        guard let job = self.actionJobMap[actionName] else { return }
+        job.reducers
+            .publisher
             .subscribe(on: DispatchQueue.global())
             .reduce(state, { newState, reducer in
-                return reducer(newState, action) as? S ?? newState
+                return reducer(newState, action)
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] state in
                 guard let strongSelf = self else { return }
                 // update state
-                strongSelf.state = state
+                job.onNewState?(&strongSelf.state, state)
                 
                 // do job after procesing action
                 strongSelf.afterProcessingAction(state: state, action: action)

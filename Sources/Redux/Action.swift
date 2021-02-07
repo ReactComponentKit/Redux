@@ -8,17 +8,6 @@
 import Foundation
 
 public protocol Action {
-    var middlewares: [Middleware] { get }
-    var reducers: [Reducer] { get }
-}
-
-extension Action {
-    public var middlewares: [Middleware] {
-        return []
-    }
-    public var reducers: [Reducer] {
-        return []
-    }
 }
 
 // Return this action in beforePrcessingAction function

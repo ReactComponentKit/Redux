@@ -8,4 +8,4 @@
 import Foundation
 
 // pure function. mutate state.
-public typealias Reducer = (State, Action) -> State
+public typealias Reducer<S: State> = (S, Action) -> S
