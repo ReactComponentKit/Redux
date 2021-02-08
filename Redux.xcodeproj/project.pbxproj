@@ -22,6 +22,8 @@
 
 /* Begin PBXBuildFile section */
 		4E7E6DEC25D13610008D351E /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DEB25D13610008D351E /* Async.swift */; };
+		4E7E6DF725D14E56008D351E /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DF625D14E56008D351E /* Test.swift */; };
+		4E7E6DFE25D15144008D351E /* CounterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DFD25D15144008D351E /* CounterStore.swift */; };
 		4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84E62C25CFA4C900A83AC8 /* Job.swift */; };
 		OBJ_30 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Action.swift */; };
 		OBJ_31 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* ActionDispatcher.swift */; };
@@ -30,7 +32,7 @@
 		OBJ_34 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* State.swift */; };
 		OBJ_35 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Store.swift */; };
 		OBJ_42 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
-		OBJ_53 /* ReduxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* ReduxTests.swift */; };
+		OBJ_53 /* CounterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* CounterStoreTests.swift */; };
 		OBJ_54 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* XCTestManifests.swift */; };
 		OBJ_56 /* Redux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Redux::Redux::Product" /* Redux.framework */; };
 /* End PBXBuildFile section */
@@ -54,13 +56,15 @@
 
 /* Begin PBXFileReference section */
 		4E7E6DEB25D13610008D351E /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		4E7E6DF625D14E56008D351E /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		4E7E6DFD25D15144008D351E /* CounterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStore.swift; sourceTree = "<group>"; };
 		4E84E62C25CFA4C900A83AC8 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
 		OBJ_10 /* ActionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDispatcher.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Middleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
 		OBJ_12 /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
 		OBJ_13 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		OBJ_14 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
-		OBJ_17 /* ReduxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReduxTests.swift; sourceTree = "<group>"; };
+		OBJ_17 /* CounterStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStoreTests.swift; sourceTree = "<group>"; };
 		OBJ_18 /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
 		OBJ_22 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		OBJ_23 /* pre-commit.sample */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "pre-commit.sample"; sourceTree = "<group>"; };
@@ -90,6 +94,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E7E6DFC25D1512C008D351E /* CounterStore */ = {
+			isa = PBXGroup;
+			children = (
+				4E7E6DFD25D15144008D351E /* CounterStore.swift */,
+			);
+			path = CounterStore;
+			sourceTree = "<group>";
+		};
+		4E7E6E0725D1546B008D351E /* AsyncStore */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AsyncStore;
+			sourceTree = "<group>";
+		};
 		OBJ_15 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,7 +120,9 @@
 		OBJ_16 /* ReduxTests */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_17 /* ReduxTests.swift */,
+				4E7E6E0725D1546B008D351E /* AsyncStore */,
+				4E7E6DFC25D1512C008D351E /* CounterStore */,
+				OBJ_17 /* CounterStoreTests.swift */,
 				OBJ_18 /* XCTestManifests.swift */,
 			);
 			name = ReduxTests;
@@ -149,6 +170,7 @@
 				OBJ_13 /* State.swift */,
 				OBJ_14 /* Store.swift */,
 				4E84E62C25CFA4C900A83AC8 /* Job.swift */,
+				4E7E6DF625D14E56008D351E /* Test.swift */,
 			);
 			name = Redux;
 			path = Sources/Redux;
@@ -238,8 +260,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				4E7E6DFE25D15144008D351E /* CounterStore.swift in Sources */,
 				OBJ_30 /* Action.swift in Sources */,
 				OBJ_31 /* ActionDispatcher.swift in Sources */,
+				4E7E6DF725D14E56008D351E /* Test.swift in Sources */,
 				OBJ_32 /* Middleware.swift in Sources */,
 				OBJ_33 /* Reducer.swift in Sources */,
 				4E7E6DEC25D13610008D351E /* Async.swift in Sources */,
@@ -261,7 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_53 /* ReduxTests.swift in Sources */,
+				OBJ_53 /* CounterStoreTests.swift in Sources */,
 				OBJ_54 /* XCTestManifests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

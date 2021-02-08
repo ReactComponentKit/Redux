@@ -15,9 +15,12 @@ open class Store<S: State>: ObservableObject {
     private var actions = PassthroughSubject<Action, Never>()
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
+    private var actionJobMap: [String: Job<S>] = [:]
     private var cancellable: Set<AnyCancellable> = Set()
     
-    private var actionJobMap: [String: Job<S>] = [:]
+    // for testing
+    internal var testResultHandler: ((S) -> Swift.Void)?
+    internal var testDequeActionHandler: (() -> Swift.Void)?
     
     public init(state: S = S()) {
         self.state = state
@@ -120,6 +123,9 @@ open class Store<S: State>: ObservableObject {
                 
                 // do job after procesing action
                 strongSelf.afterProcessingAction(state: state, action: action)
+                
+                // for testing
+                strongSelf.testResultHandler?(strongSelf.state)
 
                 // queueing actions
                 strongSelf.actionQueueMutex.wait()
@@ -132,5 +138,23 @@ open class Store<S: State>: ObservableObject {
                 strongSelf.actionQueue = []
             })
             .store(in: &cancellable)
+    }
+    
+    // For testing
+    internal func reset(with state: S) {
+        self.state = state
+    }
+    
+    internal func test(action: Action) {
+        self.dispatch(action: action)
+    }
+    
+    internal func wait(result: @escaping (S) -> Swift.Void) {
+        self.testResultHandler = result
+    }
+    
+    // calling after assert
+    internal func againTest() {
+        self.testResultHandler?(self.state)
     }
 }
