@@ -22,8 +22,8 @@
 
 /* Begin PBXBuildFile section */
 		4E7E6DEC25D13610008D351E /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DEB25D13610008D351E /* Async.swift */; };
-		4E7E6DF725D14E56008D351E /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DF625D14E56008D351E /* Test.swift */; };
 		4E7E6DFE25D15144008D351E /* CounterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DFD25D15144008D351E /* CounterStore.swift */; };
+		4E7E6E4A25D17CAF008D351E /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DF625D14E56008D351E /* Test.swift */; };
 		4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84E62C25CFA4C900A83AC8 /* Job.swift */; };
 		OBJ_30 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Action.swift */; };
 		OBJ_31 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* ActionDispatcher.swift */; };
@@ -112,6 +112,7 @@
 		OBJ_15 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				4E7E6DF625D14E56008D351E /* Test.swift */,
 				OBJ_16 /* ReduxTests */,
 			);
 			name = Tests;
@@ -170,7 +171,6 @@
 				OBJ_13 /* State.swift */,
 				OBJ_14 /* Store.swift */,
 				4E84E62C25CFA4C900A83AC8 /* Job.swift */,
-				4E7E6DF625D14E56008D351E /* Test.swift */,
 			);
 			name = Redux;
 			path = Sources/Redux;
@@ -263,7 +263,6 @@
 				4E7E6DFE25D15144008D351E /* CounterStore.swift in Sources */,
 				OBJ_30 /* Action.swift in Sources */,
 				OBJ_31 /* ActionDispatcher.swift in Sources */,
-				4E7E6DF725D14E56008D351E /* Test.swift in Sources */,
 				OBJ_32 /* Middleware.swift in Sources */,
 				OBJ_33 /* Reducer.swift in Sources */,
 				4E7E6DEC25D13610008D351E /* Async.swift in Sources */,
@@ -287,6 +286,7 @@
 			files = (
 				OBJ_53 /* CounterStoreTests.swift in Sources */,
 				OBJ_54 /* XCTestManifests.swift in Sources */,
+				4E7E6E4A25D17CAF008D351E /* Test.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,7 +310,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ENABLE_TESTABILITY = YES;
-				ENABLE_TESTING_SEARCH_PATHS = YES;
+				ENABLE_TESTING_SEARCH_PATHS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -339,7 +339,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ENABLE_TESTABILITY = YES;
-				ENABLE_TESTING_SEARCH_PATHS = YES;
+				ENABLE_TESTING_SEARCH_PATHS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -374,7 +374,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_TESTING_SEARCH_PATHS = YES;
+				ENABLE_TESTING_SEARCH_PATHS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -411,7 +411,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_TESTABILITY = YES;
-				ENABLE_TESTING_SEARCH_PATHS = YES;
+				ENABLE_TESTING_SEARCH_PATHS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",

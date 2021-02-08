@@ -7,6 +7,7 @@
 
 import Foundation
 import XCTest
+@testable import Redux
 
 public typealias Assertion<S: State> = (S) -> Swift.Void
 
