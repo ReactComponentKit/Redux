@@ -23,7 +23,7 @@
 /* Begin PBXBuildFile section */
 		4E7E6DEC25D13610008D351E /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DEB25D13610008D351E /* Async.swift */; };
 		4E7E6DFE25D15144008D351E /* CounterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DFD25D15144008D351E /* CounterStore.swift */; };
-		4E7E6E4A25D17CAF008D351E /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DF625D14E56008D351E /* Test.swift */; };
+		4E7E6E5525D17D2C008D351E /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6E4F25D17D28008D351E /* Test.swift */; };
 		4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84E62C25CFA4C900A83AC8 /* Job.swift */; };
 		OBJ_30 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Action.swift */; };
 		OBJ_31 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* ActionDispatcher.swift */; };
@@ -56,8 +56,8 @@
 
 /* Begin PBXFileReference section */
 		4E7E6DEB25D13610008D351E /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
-		4E7E6DF625D14E56008D351E /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		4E7E6DFD25D15144008D351E /* CounterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStore.swift; sourceTree = "<group>"; };
+		4E7E6E4F25D17D28008D351E /* Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Test.swift; path = Tests/Test.swift; sourceTree = "<group>"; };
 		4E84E62C25CFA4C900A83AC8 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
 		OBJ_10 /* ActionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDispatcher.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Middleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
@@ -112,7 +112,7 @@
 		OBJ_15 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				4E7E6DF625D14E56008D351E /* Test.swift */,
+				4E7E6E4F25D17D28008D351E /* Test.swift */,
 				OBJ_16 /* ReduxTests */,
 			);
 			name = Tests;
@@ -286,7 +286,7 @@
 			files = (
 				OBJ_53 /* CounterStoreTests.swift in Sources */,
 				OBJ_54 /* XCTestManifests.swift in Sources */,
-				4E7E6E4A25D17CAF008D351E /* Test.swift in Sources */,
+				4E7E6E5525D17D2C008D351E /* Test.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
