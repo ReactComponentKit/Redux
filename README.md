@@ -94,14 +94,19 @@ struct TestAsyncErrorAction: Action {
 }
 ```
 
-### Define Action and State processing pipeline in the Store
+### Define Store
 
 ```swift
 class AppStore: Store<AppState> {
     override func beforeProcessingAction(state: AppState, action: Action) -> Action {
+        // do whatever you need to
+        return action
+    }
+
+    override func afterProcessingAction(state: AppState, action: Action) {
+        // do whatever you need to
         print("[## \(action) ##]")
         print(state)
-        return action
     }
 }
 ```
