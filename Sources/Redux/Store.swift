@@ -41,10 +41,10 @@ open class Store<S: State>: ObservableObject {
     private func enqueueAction(action: Action) {
         actionQueueMutex.wait()
         defer { actionQueueMutex.signal() }
+        prepare(action: type(of: action))
         if actionQueue.isEmpty {
             actions.send(action)
         } else {
-            prepare(action: type(of: action))
             actionQueue.append(action)
         }
     }
