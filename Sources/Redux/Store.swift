@@ -63,8 +63,8 @@ open class Store<S: State>: ObservableObject {
         }
     }
     
-    private func handleSideEffect() -> (ActionDispatcher, Set<AnyCancellable>) {
-        return (enqueueAction, cancellable)
+    private func handleSideEffect() -> (ActionDispatcher, UnsafeMutablePointer<Set<AnyCancellable>>) {
+        return (enqueueAction, withUnsafeMutablePointer(to: &cancellable, { $0 }))
     }
     
     private func processActions() {
