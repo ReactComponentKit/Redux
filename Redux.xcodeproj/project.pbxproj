@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4E7E6DEC25D13610008D351E /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DEB25D13610008D351E /* Async.swift */; };
 		4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84E62C25CFA4C900A83AC8 /* Job.swift */; };
 		OBJ_30 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Action.swift */; };
 		OBJ_31 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* ActionDispatcher.swift */; };
@@ -35,6 +36,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4E7E6DEF25D13611008D351E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Redux::ReduxTests";
+			remoteInfo = ReduxTests;
+		};
 		4E84E62B25CFA4B800A83AC8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
@@ -45,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E7E6DEB25D13610008D351E /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		4E84E62C25CFA4C900A83AC8 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
 		OBJ_10 /* ActionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDispatcher.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Middleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
@@ -108,7 +117,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -119,7 +128,6 @@
 				OBJ_23 /* pre-commit.sample */,
 				OBJ_24 /* README.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -133,6 +141,7 @@
 		OBJ_8 /* Redux */ = {
 			isa = PBXGroup;
 			children = (
+				4E7E6DEB25D13610008D351E /* Async.swift */,
 				OBJ_9 /* Action.swift */,
 				OBJ_10 /* ActionDispatcher.swift */,
 				OBJ_11 /* Middleware.swift */,
@@ -211,7 +220,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_19 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -233,6 +242,7 @@
 				OBJ_31 /* ActionDispatcher.swift in Sources */,
 				OBJ_32 /* Middleware.swift in Sources */,
 				OBJ_33 /* Reducer.swift in Sources */,
+				4E7E6DEC25D13610008D351E /* Async.swift in Sources */,
 				OBJ_34 /* State.swift in Sources */,
 				4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */,
 				OBJ_35 /* Store.swift in Sources */,
@@ -262,7 +272,7 @@
 		OBJ_47 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "Redux::ReduxTests" /* ReduxTests */;
-			targetProxy = "Redux::ReduxTests" /* ReduxTests */;
+			targetProxy = 4E7E6DEF25D13611008D351E /* PBXContainerItemProxy */;
 		};
 		OBJ_57 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

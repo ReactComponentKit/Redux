@@ -105,3 +105,84 @@ class AppStore: Store<AppState> {
     }
 }
 ```
+
+### Abstract Async State Value
+
+```swift
+struct AppState: State {
+    var content: Async<String> = .uninitialized
+    var error: (Error, Action)?
+}
+```
+
+### Define Middlewares
+
+```swift
+func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEffect) {
+    var (dispatcher, cancellable) = sideEffect()
+    URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
+        .subscribe(on: DispatchQueue.global())
+        .receive(on: DispatchQueue.global())
+        .sink { (completion) in
+            switch completion {
+            case .finished:
+                break
+            case .failure(let error):
+                dispatcher(UpdateContentAction(content: .failed(error: error)))
+            }
+        } receiveValue: { (data, response) in
+            let value = String(data: data, encoding: .utf8) ?? ""
+            dispatcher(UpdateContentAction(content: .success(value: value)))
+        }
+        .store(in: &cancellable)
+
+}
+```
+
+### Define Reducers
+
+```swift
+func updateContent(state: AppState, action: Action) -> AppState {
+    guard let action = action as? UpdateContentAction else { return state }
+    return state.copy { mutation in
+        mutation.content = action.content
+    }
+}
+```
+
+### Define Actions
+
+```swift
+struct RequestContentAction: Action {
+    static var job: ActionJob {
+        Job<AppState>(middleware: [fetchContent])
+    }
+}
+
+struct UpdateContentAction: Action {
+    let content: Async<String>
+    
+    static var job: ActionJob {
+        Job<AppState>(reducers: [updateContent]) { (state, newState) in
+            state.content = newState.content
+        }
+    }
+}
+```
+
+### Consume Async State
+
+```swift
+VStack {
+    Button(action: { store.dispatch(action: RequestContentAction()) }) {
+        Text("Fetch Content")
+            .bold()
+            .multilineTextAlignment(.center)
+    }
+    ScrollView(.vertical) {
+        Text(store.state.content.value ?? store.state.content.error?.localizedDescription ?? "")
+    }
+    .frame(width: UIApplication.shared.windows.first?.frame.width)
+}
+```
+
