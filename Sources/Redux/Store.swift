@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-open class Store<S: State>: ObservableObject {
+open class Store<S: State>: ObservableObject, Cancellables {
     @Published
     public private(set) var state: S
     
@@ -16,7 +16,8 @@ open class Store<S: State>: ObservableObject {
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
     private var actionJobMap: [String: Job<S>] = [:]
-    private var cancellable: Set<AnyCancellable> = Set()
+    // conform Cancellables
+    public var bag: Set<AnyCancellable> = Set()
     
     // for testing
     internal var testResultHandler: ((S) -> Swift.Void)?
@@ -63,8 +64,12 @@ open class Store<S: State>: ObservableObject {
         }
     }
     
-    private func handleSideEffect() -> (ActionDispatcher, UnsafeMutablePointer<Set<AnyCancellable>>) {
-        return (enqueueAction, withUnsafeMutablePointer(to: &cancellable, { $0 }))
+//    private func handleSideEffect() -> (ActionDispatcher, UnsafeMutablePointer<Set<AnyCancellable>>) {
+//        return (enqueueAction, withUnsafeMutablePointer(to: &cancellable, { $0 }))
+//    }
+    
+    private func handleSideEffect() -> (ActionDispatcher, Cancellables) {
+        return (enqueueAction, self)
     }
     
     private func processActions() {
@@ -78,7 +83,7 @@ open class Store<S: State>: ObservableObject {
                     strongSelf.processMiddlewares(action: action)
                 }
             }
-            .store(in: &cancellable)
+            .store(in: &bag)
     }
     
     public func processMiddlewares(action: Action) {
@@ -88,7 +93,7 @@ open class Store<S: State>: ObservableObject {
             .subscribe(on: DispatchQueue.global())
             .tryReduce(state, { [weak self] s, m in
                 guard let strongSelf = self else { return s }
-                try m(s, action, strongSelf.handleSideEffect)
+                try m(s, action, strongSelf.handleSideEffect())
                 return s
             })
             .receive(on: DispatchQueue.main)
@@ -103,7 +108,7 @@ open class Store<S: State>: ObservableObject {
                 self?.state.error = nil
                 self?.processReducers(action: action)
             })
-            .store(in: &cancellable)
+            .store(in: &bag)
     }
     
     private func processReducers(action: Action) {
@@ -137,7 +142,7 @@ open class Store<S: State>: ObservableObject {
                 }
                 strongSelf.actionQueue = []
             })
-            .store(in: &cancellable)
+            .store(in: &bag)
     }
     
     // For testing
