@@ -22,10 +22,10 @@ open class Store<S: State>: ObservableObject {
     public init(state: S = S()) {
         self.state = state
         self.processActions()
-        self.registerJobs()
     }
     
     public func dispatch(action: Action) {
+        prepare(action: type(of: action))
         actions.send(action)
     }
     
@@ -38,17 +38,25 @@ open class Store<S: State>: ObservableObject {
         // Override this function if need some job after processing action.
     }
     
-    open func registerJobs() {
-        // 
-    }
-    
     private func enqueueAction(action: Action) {
         actionQueueMutex.wait()
         defer { actionQueueMutex.signal() }
         if actionQueue.isEmpty {
             actions.send(action)
         } else {
+            prepare(action: type(of: action))
             actionQueue.append(action)
+        }
+    }
+    
+    private func prepare(action: Action.Type) {
+        let job = action.job
+        let actionName = "\(action)"
+        if self.actionJobMap[actionName] != nil {
+            return
+        }
+        if let job = job as? Job<S> {
+            self.actionJobMap[actionName] = job
         }
     }
     
@@ -68,20 +76,6 @@ open class Store<S: State>: ObservableObject {
                 }
             }
             .store(in: &cancellable)
-    }
-    
-//    public func process(action: Action.Type, job: () -> Job<S>) {
-//        let job = job()
-//        let actionName = "\(action)"
-//        self.actionJobMap[actionName] = job
-//    }
-    
-    public func process(action: Action.Type) {
-        let job = action.job
-        let actionName = "\(action)"
-        if let job = job as? Job<S> {
-            self.actionJobMap[actionName] = job
-        }
     }
     
     public func processMiddlewares(action: Action) {
