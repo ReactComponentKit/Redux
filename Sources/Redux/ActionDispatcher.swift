@@ -6,5 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 public typealias ActionDispatcher = (Action) -> Swift.Void
+public typealias SideEffect = () -> (ActionDispatcher, Set<AnyCancellable>)

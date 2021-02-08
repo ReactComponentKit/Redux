@@ -8,4 +8,4 @@
 import Foundation
 
 // Job before reducers
-public typealias Middleware<S: State> = (S, Action, @escaping ActionDispatcher) throws -> Swift.Void
+public typealias Middleware<S: State> = (S, Action, @escaping SideEffect) throws -> Swift.Void

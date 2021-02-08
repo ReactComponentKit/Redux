@@ -52,6 +52,10 @@ open class Store<S: State>: ObservableObject {
         }
     }
     
+    private func handleSideEffect() -> (ActionDispatcher, Set<AnyCancellable>) {
+        return (enqueueAction, cancellable)
+    }
+    
     private func processActions() {
         actions
             .subscribe(on: DispatchQueue.global())
@@ -79,7 +83,7 @@ open class Store<S: State>: ObservableObject {
             .subscribe(on: DispatchQueue.global())
             .tryReduce(state, { [weak self] s, m in
                 guard let strongSelf = self else { return s }
-                try m(s, action, strongSelf.enqueueAction)
+                try m(s, action, strongSelf.handleSideEffect)
                 return s
             })
             .receive(on: DispatchQueue.main)
