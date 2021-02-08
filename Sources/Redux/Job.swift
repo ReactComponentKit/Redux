@@ -7,12 +7,13 @@
 
 import Foundation
 
-public typealias StateMutation<S: State> = (inout S, S) -> Swift.Void
+public protocol ActionJob {
+}
 
-public struct Job<S: State> {
-    var middlewares: [Middleware<S>]
-    var reducers: [Reducer<S>]
-    var onNewState: StateMutation<S>?
+public struct Job<S: State>: ActionJob {
+    internal var middlewares: [Middleware<S>]
+    internal var reducers: [Reducer<S>]
+    internal var onNewState: StateMutation<S>?
 
     public init(middlewares: [Middleware<S>] = [], reducers: [Reducer<S>] = [], onNewState: StateMutation<S>? = nil) {
         self.middlewares = middlewares

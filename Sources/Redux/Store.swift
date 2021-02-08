@@ -70,10 +70,18 @@ open class Store<S: State>: ObservableObject {
             .store(in: &cancellable)
     }
     
-    public func process(action: Action.Type, job: () -> Job<S>) {
-        let job = job()
+//    public func process(action: Action.Type, job: () -> Job<S>) {
+//        let job = job()
+//        let actionName = "\(action)"
+//        self.actionJobMap[actionName] = job
+//    }
+    
+    public func process(action: Action.Type) {
+        let job = action.job
         let actionName = "\(action)"
-        self.actionJobMap[actionName] = job
+        if let job = job as? Job<S> {
+            self.actionJobMap[actionName] = job
+        }
     }
     
     public func processMiddlewares(action: Action) {

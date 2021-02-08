@@ -8,9 +8,13 @@
 import Foundation
 
 public protocol Action {
+    static var job: ActionJob { get }
 }
 
 // Return this action in beforePrcessingAction function
 // if you need to cancel the current action.
 public struct CancelAction: Action {
+    public static var job: ActionJob {
+        Job<EmptyState>()
+    }
 }
