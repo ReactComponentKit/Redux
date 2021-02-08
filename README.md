@@ -24,12 +24,12 @@ enum MyError: Error {
     case tempError
 }
 
-func asyncJob(state: AppState, action: Action, dispatcher: @escaping ActionDispatcher) {
+func asyncJob(state: AppState, action: Action, sideEffect: @escaping SideEffect) {
     Thread.sleep(forTimeInterval: 2)
     dispatcher(IncrementAction(payload: 2))
 }
 
-func asyncJobWithError(state: AppState, action: Action, dispatcher: @escaping ActionDispatcher) throws {
+func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect) throws {
     Thread.sleep(forTimeInterval: 20)
     throw MyError.tempError
 }
@@ -119,7 +119,7 @@ struct AppState: State {
 
 ```swift
 func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEffect) {
-    var (dispatcher, cancellable) = sideEffect()
+    var (dispatch, cancellable) = sideEffect()
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())
@@ -128,11 +128,11 @@ func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEff
             case .finished:
                 break
             case .failure(let error):
-                dispatcher(UpdateContentAction(content: .failed(error: error)))
+                dispatch(UpdateContentAction(content: .failed(error: error)))
             }
         } receiveValue: { (data, response) in
             let value = String(data: data, encoding: .utf8) ?? ""
-            dispatcher(UpdateContentAction(content: .success(value: value)))
+            dispatch(UpdateContentAction(content: .success(value: value)))
         }
         .store(in: &cancellable)
 
