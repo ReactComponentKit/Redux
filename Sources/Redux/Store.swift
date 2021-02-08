@@ -63,11 +63,7 @@ open class Store<S: State>: ObservableObject, Cancellables {
             self.actionJobMap[actionName] = job
         }
     }
-    
-//    private func handleSideEffect() -> (ActionDispatcher, UnsafeMutablePointer<Set<AnyCancellable>>) {
-//        return (enqueueAction, withUnsafeMutablePointer(to: &cancellable, { $0 }))
-//    }
-    
+        
     private func handleSideEffect() -> (ActionDispatcher, Cancellables) {
         return (enqueueAction, self)
     }
@@ -93,7 +89,7 @@ open class Store<S: State>: ObservableObject, Cancellables {
             .subscribe(on: DispatchQueue.global())
             .tryReduce(state, { [weak self] s, m in
                 guard let strongSelf = self else { return s }
-                try m(s, action, strongSelf.handleSideEffect())
+                try m(s, action, strongSelf.handleSideEffect)
                 return s
             })
             .receive(on: DispatchQueue.main)
