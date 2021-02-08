@@ -56,21 +56,40 @@ func counterReducer(state: AppState, action: Action) -> AppState {
 
 ```swift
 struct AsyncIncrementAction: Action {
+    static var job: ActionJob {
+        Job<AppState>(middleware: [asyncJob])
+    }
 }
 
 struct IncrementAction: Action {
     let payload: Int
-    
     init(payload: Int = 1) {
         self.payload = payload
+    }
+    
+    static var job: ActionJob {
+        Job<AppState>(reducers: [counterReducer]) { state, newState in
+            state.count = newState.count
+        }
     }
 }
 
 struct DecrementAction: Action {
     let payload: Int
-    
     init(payload: Int = 1) {
         self.payload = payload
+    }
+    
+    static var job: ActionJob {
+        Job(reducers: [counterReducer]) { state, newState in
+            state.count = newState.count
+        }
+    }
+}
+
+struct TestAsyncErrorAction: Action {
+    static var job: ActionJob {
+        Job<AppState>(middleware: [asyncJobWithError])
     }
 }
 ```
@@ -83,24 +102,6 @@ class AppStore: Store<AppState> {
         print("[## \(action) ##]")
         print(state)
         return action
-    }
-    
-    override func registerJobs() {
-        process(action: AsyncIncrementAction.self) {
-            Job(middlewares: [asyncJob])
-        }
-        
-        process(action: IncrementAction.self) {
-            Job<AppState>(reducers: [counterReducer]) { (state, newState) in
-                state.count = newState.count
-            }
-        }
-        
-        process(action: DecrementAction.self) {
-            Job(reducers: [counterReducer]) { (state, newState) in
-                state.count = newState.count
-            }
-        }
     }
 }
 ```
