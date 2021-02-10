@@ -25,8 +25,9 @@ enum MyError: Error {
 }
 
 func asyncJob(state: AppState, action: Action, sideEffect: @escaping SideEffect) {
+    let (dispatch, _) = sideEffect()
     Thread.sleep(forTimeInterval: 2)
-    dispatcher(IncrementAction(payload: 2))
+    dispatch(IncrementAction(payload: 2))
 }
 
 func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect) throws {
@@ -139,7 +140,7 @@ func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEff
             let value = String(data: data, encoding: .utf8) ?? ""
             dispatch(UpdateContentAction(content: .success(value: value)))
         }
-        .store(in: &cancellable)
+        .store(in: &cancellable.bag)
 
 }
 ```
