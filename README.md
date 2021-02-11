@@ -126,6 +126,10 @@ struct AppState: State {
 ```swift
 func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
     var (dispatch, context) = sideEffect()
+    
+    // if you need to access the store
+    let store: AppStore = context.store()
+    
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())

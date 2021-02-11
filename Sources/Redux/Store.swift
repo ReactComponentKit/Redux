@@ -32,6 +32,10 @@ open class Store<S: State>: ObservableObject {
         actions.send(action)
     }
     
+    public func store<STORE: Store<S>>() -> STORE {
+        return self as! STORE
+    }
+    
     open func beforeProcessingAction(state: S, action: Action) -> Action {
         // Override this function if need some job before processing action.
         return action

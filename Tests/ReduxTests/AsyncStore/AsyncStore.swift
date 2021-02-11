@@ -14,7 +14,8 @@ struct AsyncState: State {
 }
 
 class AsyncStore: Store<AsyncState> {
-    
+    // something likes Core Data Contexts
+    public var shareVariableAmongMiddlewares = "Hello Middleware!"
 }
 
 
@@ -38,6 +39,10 @@ struct UpdateContentAction: Action {
 
 func fetchContent(state: AsyncState, action: Action, sideEffect: @escaping SideEffect<AsyncState>) {
     let (dispatch, context) = sideEffect()
+    
+    let store: AsyncStore = context.store()
+    print(store.shareVariableAmongMiddlewares)
+    
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())

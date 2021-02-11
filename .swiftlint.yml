@@ -217,6 +217,11 @@ disabled_rules: # rule identifiers to exclude from running
   # 비활성 guard let 이 한 줄 일 때, 어색함.
   - conditional_returns_on_newline
 
+  # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
+  # https://github.com/realm/SwiftLint/blob/master/Rules.md#force-cast
+  # disable to use force cast in the store's store() method
+  - force_cast
+
 opt_in_rules: # some rules are only opt-in
 
   # Rationale: When using map, we think of it being used to transform a current array into something else
@@ -350,10 +355,6 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: Encourages using the right API to solve a problem
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#for-where
   - for_where
-
-  # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
-  # https://github.com/realm/SwiftLint/blob/master/Rules.md#force-cast
-  - force_cast
 
   # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#force-try
