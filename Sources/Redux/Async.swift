@@ -8,7 +8,7 @@
 import Foundation
 
 // abstract async state value
-public enum Async<T> {
+public enum Async<T: Equatable>: Equatable {
     case uninitialized
     case success(value: T)
     case failed(error: Error)
@@ -39,5 +39,25 @@ public enum Async<T> {
             return true
         }
         return false
+    }
+    
+    public static func == (lhs: Async<T>, rhs: Async<T>) -> Bool {
+        switch lhs {
+        case .uninitialized:
+            if case .uninitialized = rhs {
+                return true
+            }
+            return false
+        case .failed:
+            if case .failed = rhs {
+                return true
+            }
+            return false
+        case .success(value: let value):
+            if case let .success(v) = rhs {
+                return value == v
+            }
+            return false
+        }
     }
 }

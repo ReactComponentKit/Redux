@@ -9,6 +9,4 @@ import Foundation
 import Combine
 
 public typealias ActionDispatcher = (Action) -> Swift.Void
-public typealias SideEffect = () -> (ActionDispatcher, StoreContext)
-public protocol StoreContext: class {
-}
+public typealias SideEffect<S: State> = () -> (ActionDispatcher, Store<S>)

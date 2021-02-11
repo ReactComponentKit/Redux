@@ -24,13 +24,13 @@ enum MyError: Error {
     case tempError
 }
 
-func asyncJob(state: AppState, action: Action, sideEffect: @escaping SideEffect) {
+func asyncJob(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
     let (dispatch, _) = sideEffect()
     Thread.sleep(forTimeInterval: 2)
     dispatch(IncrementAction(payload: 2))
 }
 
-func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect) throws {
+func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) throws {
     Thread.sleep(forTimeInterval: 20)
     throw MyError.tempError
 }
@@ -124,8 +124,8 @@ struct AppState: State {
 ### Define Middlewares
 
 ```swift
-func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEffect) {
-    var (dispatch, cancellable) = sideEffect()
+func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
+    var (dispatch, context) = sideEffect()
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())
@@ -140,7 +140,7 @@ func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEff
             let value = String(data: data, encoding: .utf8) ?? ""
             dispatch(UpdateContentAction(content: .success(value: value)))
         }
-        .store(in: &cancellable.bag)
+        .store(in: &context.cancellable)
 
 }
 ```

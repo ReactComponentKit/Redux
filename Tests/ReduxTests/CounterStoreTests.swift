@@ -3,7 +3,7 @@ import XCTest
 
 final class CounterStoreTests: XCTestCase {
     
-    private var store: CounterStore? = nil
+    private var store: CounterStore!
     
     override func setUp() {
         super.setUp()

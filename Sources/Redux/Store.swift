@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-open class Store<S: State>: ObservableObject, StoreContext {
+open class Store<S: State>: ObservableObject {
     @Published
     public private(set) var state: S
     
@@ -63,7 +63,7 @@ open class Store<S: State>: ObservableObject, StoreContext {
         }
     }
         
-    private func handleSideEffect() -> (ActionDispatcher, StoreContext) {
+    private func handleSideEffect() -> (ActionDispatcher, Store<S>) {
         return (enqueueAction, self)
     }
     
@@ -81,7 +81,7 @@ open class Store<S: State>: ObservableObject, StoreContext {
             .store(in: &cancellables)
     }
     
-    public func processMiddlewares(action: Action) {
+    private func processMiddlewares(action: Action) {
         let actionName = "\(type(of: action))"
         guard let job = self.actionJobMap[actionName] else { return }
         job.middlewares.publisher
@@ -125,7 +125,9 @@ open class Store<S: State>: ObservableObject, StoreContext {
                 strongSelf.afterProcessingAction(state: state, action: action)
                 
                 // for testing
-                strongSelf.testResultHandler?(strongSelf.state)
+                if !job.reducers.isEmpty {
+                    strongSelf.testResultHandler?(strongSelf.state)
+                }
 
                 // queueing actions
                 strongSelf.actionQueueMutex.wait()
