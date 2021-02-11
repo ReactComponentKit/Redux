@@ -9,7 +9,6 @@ import Foundation
 import Combine
 
 public typealias ActionDispatcher = (Action) -> Swift.Void
-public typealias SideEffect = () -> (ActionDispatcher, Cancellables)
-public protocol Cancellables: class {
-    var bag: Set<AnyCancellable> { get set }
+public typealias SideEffect = () -> (ActionDispatcher, StoreContext)
+public protocol StoreContext: class {
 }

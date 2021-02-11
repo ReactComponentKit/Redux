@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-open class Store<S: State>: ObservableObject, Cancellables {
+open class Store<S: State>: ObservableObject, StoreContext {
     @Published
     public private(set) var state: S
     
@@ -16,8 +16,7 @@ open class Store<S: State>: ObservableObject, Cancellables {
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
     private var actionJobMap: [String: Job<S>] = [:]
-    // conform Cancellables
-    public var bag: Set<AnyCancellable> = Set()
+    public var cancellables: Set<AnyCancellable> = Set()
     
     // for testing
     internal var testResultHandler: ((S) -> Swift.Void)?
@@ -64,7 +63,7 @@ open class Store<S: State>: ObservableObject, Cancellables {
         }
     }
         
-    private func handleSideEffect() -> (ActionDispatcher, Cancellables) {
+    private func handleSideEffect() -> (ActionDispatcher, StoreContext) {
         return (enqueueAction, self)
     }
     
@@ -79,7 +78,7 @@ open class Store<S: State>: ObservableObject, Cancellables {
                     strongSelf.processMiddlewares(action: action)
                 }
             }
-            .store(in: &bag)
+            .store(in: &cancellables)
     }
     
     public func processMiddlewares(action: Action) {
@@ -104,7 +103,7 @@ open class Store<S: State>: ObservableObject, Cancellables {
                 self?.state.error = nil
                 self?.processReducers(action: action)
             })
-            .store(in: &bag)
+            .store(in: &cancellables)
     }
     
     private func processReducers(action: Action) {
@@ -138,7 +137,7 @@ open class Store<S: State>: ObservableObject, Cancellables {
                 }
                 strongSelf.actionQueue = []
             })
-            .store(in: &bag)
+            .store(in: &cancellables)
     }
     
     // For testing
