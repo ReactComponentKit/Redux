@@ -32,20 +32,99 @@ open class Store<S: State>: ObservableObject {
         actions.send(action)
     }
     
-    public func dispatch<T>(payload: T, middleware: @escaping Middleware<S>) {
-        let actionJob = Job<S>(middlewares: [middleware])
-        let time = Date().timeIntervalSince1970
-        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
-        dispatch(action: temporalAction)
+    // Dispatch Implicit Action to the middleware without payload
+    public func dispatch(middleware: @escaping (S, SideEffect<S>) -> Swift.Void) {
+        func makeMiddleware(actionName: String) -> Middleware<S> {
+            return { (state: S, action: Action, sideEffect: @escaping SideEffect<S>) in
+                guard
+                    action is ImplicitAction<Int>,
+                    action.name == actionName
+                else {
+                    return
+                }
+                middleware(state, sideEffect)
+            }
+        }
+        
+        let actionName = "\(Date().timeIntervalSince1970)"
+        let actionJob = Job<S>(middlewares: [
+            makeMiddleware(actionName: actionName)
+        ])
+        let action = ImplicitAction(payload: -1, name: actionName, job: actionJob)
+        dispatch(action: action)
     }
     
-    public func dispatch<T>(_ keyPath: WritableKeyPath<S, T>, payload: T, reducer: @escaping Reducer<S>) {
-        let actionJob = Job<S>(reducers: [reducer]) { (state, newState) in
+    // Dispatch Implicit Action to the middleware with payload
+    public func dispatch<T>(payload: T, middleware: @escaping (S, T, SideEffect<S>) -> Swift.Void) {
+        func makeMiddleware(actionName: String) -> Middleware<S> {
+            return { (state: S, action: Action, sideEffect: @escaping SideEffect<S>) in
+                guard
+                    action is ImplicitAction<T>,
+                    let value: T = action.get()
+                else {
+                    return
+                }
+                middleware(state, value, sideEffect)
+            }
+        }
+        
+        let actionName = "\(Date().timeIntervalSince1970)"
+        let actionJob = Job<S>(middlewares: [
+            makeMiddleware(actionName: actionName)
+        ])
+        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
+        dispatch(action: action)
+    }
+    
+    // Dispatch Implicit Action to the reducer with payload
+    public func dispatch<T>(_ keyPath: WritableKeyPath<S, T>, payload: T, reducer: @escaping (S, T) -> S) {
+        func makeReducer(actionName: String) -> Reducer<S> {
+            return { (state: S, action: Action) -> S in
+                guard
+                    action is ImplicitAction<T>,
+                    action.name == actionName,
+                    let value: T = action.get()
+                else {
+                    return state
+                }
+                return reducer(state, value)
+            }
+        }
+        
+        let actionName = "\(Date().timeIntervalSince1970)"
+        let actionJob = Job<S>(reducers: [
+            makeReducer(actionName: actionName)
+        ]) { (state, newState) in
             state[keyPath: keyPath] = newState[keyPath: keyPath]
         }
-        let time = Date().timeIntervalSince1970
-        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
-        dispatch(action: temporalAction)
+        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
+        dispatch(action: action)
+    }
+    
+    public func updateAsync<T>(_ keyPath: WritableKeyPath<S, Async<T>>, payload: Async<T>) {
+        func makeReducer(actionName: String) -> Reducer<S> {
+            return { (state: S, action: Action) -> S in
+                guard
+                    action is ImplicitAction<Async<T>>,
+                    action.name == actionName,
+                    let value: Async<T> = action.get()
+                else {
+                    return state
+                }
+                return state.copy { mutation in
+                    mutation[keyPath: keyPath] = value
+                }
+            }
+        }
+        
+        let actionName = "\(Date().timeIntervalSince1970)"
+        let actionJob = Job<S>(reducers: [
+            makeReducer(actionName: actionName)
+        ]) { (state, newState) in
+            state[keyPath: keyPath] = newState[keyPath: keyPath]
+        }
+        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
+        dispatch(action: action)
     }
     
     public func store<STORE: Store<S>>() -> STORE {
@@ -161,8 +240,10 @@ open class Store<S: State>: ObservableObject {
             })
             .store(in: &cancellables)
     }
-        
-    // For testing
+}
+
+// For testing
+extension Store {
     internal func reset(with state: S) {
         self.state = state
     }

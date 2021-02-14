@@ -19,13 +19,13 @@ extension Action {
 }
 
 extension Action {
-    public func get<T>() -> T? {
-        guard let act = self as? TemporalAction<T> else { return nil }
+    internal func get<T>() -> T? {
+        guard let act = self as? ImplicitAction<T> else { return nil }
         return act.payload
     }
     
-    public func getOr<T>(_ value: T) -> T {
-        guard let act = self as? TemporalAction<T> else { return value }
+    internal func getOr<T>(_ value: T) -> T {
+        guard let act = self as? ImplicitAction<T> else { return value }
         return act.payload
     }
 }
@@ -38,7 +38,7 @@ public struct CancelAction: Action {
     }
 }
 
-struct TemporalAction<T>: Action {
+struct ImplicitAction<T>: Action {
     var payload: T
     var name: String
     var job: ActionJob = Job<EmptyState>()

@@ -21,11 +21,21 @@ public struct Job<S: State>: ActionJob {
         self.onNewState = onNewState
     }
     
+    public init<T>(keyPath: WritableKeyPath<S, T>, middlewares: [Middleware<S>] = [], reducers: [Reducer<S>] = []) {
+        self.init(middlewares: middlewares, reducers: reducers, onNewState: { (state, newState) in
+            state[keyPath: keyPath] = newState[keyPath: keyPath]
+        })
+    }
+    
     public init(middleware: [Middleware<S>]) {
         self.init(middlewares: middleware, reducers: [], onNewState: nil)
     }
     
     public init(reducers: [Reducer<S>], onNewState: @escaping StateMutation<S>) {
         self.init(middlewares: [], reducers: reducers, onNewState: onNewState)
+    }
+    
+    public init<T>(keyPath: WritableKeyPath<S, T>, reducers: [Reducer<S>]) {
+        self.init(keyPath: keyPath, middlewares: [], reducers: reducers)
     }
 }

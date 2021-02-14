@@ -18,9 +18,7 @@ class CounterStore: Store<CounterState> {
 struct IncrementAction: Action {
     let payload: Int
     var job: ActionJob {
-        Job<CounterState>(reducers: [counterReducer]) { state, newState in
-            state.count = newState.count
-        }
+        Job<CounterState>(keyPath: \.count, reducers: [counterReducer])
     }
 }
 

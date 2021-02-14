@@ -31,20 +31,70 @@ public class Test<S: State> {
         return self
     }
     
-    public func dispatch<T>(payload: T, middleware: @escaping Middleware<S>) -> Test {
-        let actionJob = Job<S>(middlewares: [middleware])
-        let time = Date().timeIntervalSince1970
-        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
-        return dispatch(action: temporalAction)
+    public func dispatch(middleware: @escaping (S, SideEffect<S>) -> Swift.Void) -> Test {
+        func makeMiddleware(actionName: String) -> Middleware<S> {
+            return { (state: S, action: Action, sideEffect: @escaping SideEffect<S>) in
+                guard
+                    action is ImplicitAction<Int>,
+                    action.name == actionName
+                else {
+                    return
+                }
+                middleware(state, sideEffect)
+            }
+        }
+        
+        let actionName = "\(Date().timeIntervalSince1970)"
+        let actionJob = Job<S>(middlewares: [
+            makeMiddleware(actionName: actionName)
+        ])
+        let action = ImplicitAction(payload: -1, name: actionName, job: actionJob)
+        return dispatch(action: action)
     }
     
-    public func dispatch<T>(_ keyPath: WritableKeyPath<S, T>, payload: T, reducer: @escaping Reducer<S>) -> Test {
-        let actionJob = Job<S>(reducers: [reducer]) { (state, newState) in
+    public func dispatch<T>(payload: T, middleware: @escaping (S, T, SideEffect<S>) -> Swift.Void) -> Test {
+        func makeMiddleware(actionName: String) -> Middleware<S> {
+            return { (state: S, action: Action, sideEffect: @escaping SideEffect<S>) in
+                guard
+                    action is ImplicitAction<T>,
+                    let value: T = action.get()
+                else {
+                    return
+                }
+                middleware(state, value, sideEffect)
+            }
+        }
+        
+        let actionName = "\(Date().timeIntervalSince1970)"
+        let actionJob = Job<S>(middlewares: [
+            makeMiddleware(actionName: actionName)
+        ])
+        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
+        return dispatch(action: action)
+    }
+    
+    public func dispatch<T>(_ keyPath: WritableKeyPath<S, T>, payload: T, reducer: @escaping (S, T) -> S) -> Test {
+        func makeReducer(actionName: String) -> Reducer<S> {
+            return { (state: S, action: Action) -> S in
+                guard
+                    action is ImplicitAction<T>,
+                    action.name == actionName,
+                    let value: T = action.get()
+                else {
+                    return state
+                }
+                return reducer(state, value)
+            }
+        }
+        
+        let actionName = "\(Date().timeIntervalSince1970)"
+        let actionJob = Job<S>(reducers: [
+            makeReducer(actionName: actionName)
+        ]) { (state, newState) in
             state[keyPath: keyPath] = newState[keyPath: keyPath]
         }
-        let time = Date().timeIntervalSince1970
-        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
-        return dispatch(action: temporalAction)
+        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
+        return dispatch(action: action)
     }
     
     public func test(_ assert: @escaping Assertion<S>) -> Test {
@@ -92,9 +142,12 @@ public class Test<S: State> {
                 store.againTest()
             }
         }
-        
         testCase.wait(for: [expectation], timeout: timeout)
     }
+}
+
+extension Store {
+    
 }
 
 extension XCTestCase {
