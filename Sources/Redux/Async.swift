@@ -10,6 +10,7 @@ import Foundation
 // abstract async state value
 public enum Async<T: Equatable>: Equatable {
     case uninitialized
+    case loading
     case success(value: T)
     case failed(error: Error)
     
@@ -45,6 +46,11 @@ public enum Async<T: Equatable>: Equatable {
         switch lhs {
         case .uninitialized:
             if case .uninitialized = rhs {
+                return true
+            }
+            return false
+        case .loading:
+            if case .loading = rhs {
                 return true
             }
             return false

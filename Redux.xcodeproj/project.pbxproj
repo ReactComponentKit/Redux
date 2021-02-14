@@ -27,6 +27,7 @@
 		4E7E6DFE25D15144008D351E /* CounterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6DFD25D15144008D351E /* CounterStore.swift */; };
 		4E7E6E5525D17D2C008D351E /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6E4F25D17D28008D351E /* Test.swift */; };
 		4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84E62C25CFA4C900A83AC8 /* Job.swift */; };
+		4E935AFF25D8C38900A3432B /* DispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E935AFE25D8C38900A3432B /* DispatchTests.swift */; };
 		OBJ_30 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Action.swift */; };
 		OBJ_31 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* ActionDispatcher.swift */; };
 		OBJ_32 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Middleware.swift */; };
@@ -63,6 +64,7 @@
 		4E7E6DFD25D15144008D351E /* CounterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStore.swift; sourceTree = "<group>"; };
 		4E7E6E4F25D17D28008D351E /* Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Test.swift; path = Tests/Test.swift; sourceTree = "<group>"; };
 		4E84E62C25CFA4C900A83AC8 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
+		4E935AFE25D8C38900A3432B /* DispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchTests.swift; sourceTree = "<group>"; };
 		OBJ_10 /* ActionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDispatcher.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Middleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
 		OBJ_12 /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				4E7E6DFC25D1512C008D351E /* CounterStore */,
 				OBJ_17 /* CounterStoreTests.swift */,
 				4E7C325625D52DB2001D3F79 /* AsyncStoreTests.swift */,
+				4E935AFE25D8C38900A3432B /* DispatchTests.swift */,
 				OBJ_18 /* XCTestManifests.swift */,
 			);
 			name = ReduxTests;
@@ -292,6 +295,7 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_53 /* CounterStoreTests.swift in Sources */,
+				4E935AFF25D8C38900A3432B /* DispatchTests.swift in Sources */,
 				OBJ_54 /* XCTestManifests.swift in Sources */,
 				4E7C326825D5313B001D3F79 /* AsyncStoreTests.swift in Sources */,
 				4E7E6E5525D17D2C008D351E /* Test.swift in Sources */,

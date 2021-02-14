@@ -31,6 +31,22 @@ public class Test<S: State> {
         return self
     }
     
+    public func dispatch<T>(payload: T, middleware: @escaping Middleware<S>) -> Test {
+        let actionJob = Job<S>(middlewares: [middleware])
+        let time = Date().timeIntervalSince1970
+        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
+        return dispatch(action: temporalAction)
+    }
+    
+    public func dispatch<T>(_ keyPath: WritableKeyPath<S, T>, payload: T, reducer: @escaping Reducer<S>) -> Test {
+        let actionJob = Job<S>(reducers: [reducer]) { (state, newState) in
+            state[keyPath: keyPath] = newState[keyPath: keyPath]
+        }
+        let time = Date().timeIntervalSince1970
+        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
+        return dispatch(action: temporalAction)
+    }
+    
     public func test(_ assert: @escaping Assertion<S>) -> Test {
         actionQueue.insert((nil, assert), at: 0)
         return self

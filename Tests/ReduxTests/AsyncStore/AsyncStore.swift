@@ -20,15 +20,14 @@ class AsyncStore: Store<AsyncState> {
 
 
 struct FetchContentAction: Action {
-    static var job: ActionJob {
+    var job: ActionJob {
         Job<AsyncState>(middleware: [fetchContent])
     }
 }
 
 struct UpdateContentAction: Action {
     let content: Async<String>
-    
-    static var job: ActionJob {
+    var job: ActionJob {
         Job<AsyncState>(reducers: [
             updateContent
         ]) { (state, newState) in

@@ -28,8 +28,24 @@ open class Store<S: State>: ObservableObject {
     }
     
     public func dispatch(action: Action) {
-        prepare(action: type(of: action))
+        prepare(action: action)
         actions.send(action)
+    }
+    
+    public func dispatch<T>(payload: T, middleware: @escaping Middleware<S>) {
+        let actionJob = Job<S>(middlewares: [middleware])
+        let time = Date().timeIntervalSince1970
+        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
+        dispatch(action: temporalAction)
+    }
+    
+    public func dispatch<T>(_ keyPath: WritableKeyPath<S, T>, payload: T, reducer: @escaping Reducer<S>) {
+        let actionJob = Job<S>(reducers: [reducer]) { (state, newState) in
+            state[keyPath: keyPath] = newState[keyPath: keyPath]
+        }
+        let time = Date().timeIntervalSince1970
+        let temporalAction = TemporalAction(payload: payload, name: "\(time)", job: actionJob)
+        dispatch(action: temporalAction)
     }
     
     public func store<STORE: Store<S>>() -> STORE {
@@ -48,7 +64,7 @@ open class Store<S: State>: ObservableObject {
     private func enqueueAction(action: Action) {
         actionQueueMutex.wait()
         defer { actionQueueMutex.signal() }
-        prepare(action: type(of: action))
+        prepare(action: action)
         if actionQueue.isEmpty {
             actions.send(action)
         } else {
@@ -56,9 +72,9 @@ open class Store<S: State>: ObservableObject {
         }
     }
     
-    private func prepare(action: Action.Type) {
+    private func prepare(action: Action) {
         let job = action.job
-        let actionName = "\(action)"
+        let actionName = action.name
         if self.actionJobMap[actionName] != nil {
             return
         }
@@ -86,7 +102,7 @@ open class Store<S: State>: ObservableObject {
     }
     
     private func processMiddlewares(action: Action) {
-        let actionName = "\(type(of: action))"
+        let actionName = action.name
         guard let job = self.actionJobMap[actionName] else { return }
         job.middlewares.publisher
             .subscribe(on: DispatchQueue.global())
@@ -111,7 +127,7 @@ open class Store<S: State>: ObservableObject {
     }
     
     private func processReducers(action: Action) {
-        let actionName = "\(type(of: action))"
+        let actionName = action.name
         guard let job = self.actionJobMap[actionName] else { return }
         job.reducers
             .publisher
@@ -145,7 +161,7 @@ open class Store<S: State>: ObservableObject {
             })
             .store(in: &cancellables)
     }
-    
+        
     // For testing
     internal func reset(with state: S) {
         self.state = state

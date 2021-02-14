@@ -26,7 +26,7 @@ final class AsyncStoreTests: XCTestCase {
         XCTAssertEqual(Async<String>.uninitialized, store.state.content)
         XCTAssertNil(store.state.error)
     }
-    
+        
     func testAsyncAction() {
         let test = Test<AsyncState>()
 
