@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@dynamicMemberLookup
 open class Store<S: State>: ObservableObject {
     @Published
     public private(set) var state: S
@@ -25,6 +26,10 @@ open class Store<S: State>: ObservableObject {
     public init(state: S = S()) {
         self.state = state
         self.processActions()
+    }
+    
+    public subscript<T>(dynamicMember keyPath: KeyPath<S, T>) -> T {
+        return state[keyPath: keyPath]
     }
     
     public func dispatch(action: Action) {

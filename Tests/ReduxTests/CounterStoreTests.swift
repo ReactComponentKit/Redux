@@ -16,8 +16,8 @@ final class CounterStoreTests: XCTestCase {
     }
     
     func testInitialState() {
-        XCTAssertEqual(0, store!.state.count)
-        XCTAssertNil(store!.state.error)
+        XCTAssertEqual(0, store.count)
+        XCTAssertNil(store.error)
     }
     
     func testIncrementAction() {
@@ -84,8 +84,8 @@ final class CounterStoreTests: XCTestCase {
         let counterState = CounterState(count: 10, error: nil)
         test.reset(store: store!, state: counterState)
 
-        XCTAssertEqual(10, store!.state.count)
-        XCTAssertNil(store!.state.error)
+        XCTAssertEqual(10, store.count)
+        XCTAssertNil(store.error)
 
         test.dispatch(action: IncrementAction(payload: 1))
             .dispatch(action: IncrementAction(payload: 2))
