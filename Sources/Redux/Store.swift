@@ -25,6 +25,7 @@ open class Store<S: State>: ObservableObject {
     
     public init(state: S = S()) {
         self.state = state
+        self.prepareStore()
         self.processActions()
     }
     
@@ -133,6 +134,10 @@ open class Store<S: State>: ObservableObject {
     
     public func store<STORE: Store<S>>() -> STORE {
         return self as! STORE
+    }
+    
+    open func prepareStore() {
+        // Override this function if you need to do some job for preparing store.
     }
     
     open func beforeProcessingAction(state: S, action: Action) -> Action {
