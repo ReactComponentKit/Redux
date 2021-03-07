@@ -34,7 +34,8 @@ open class Store<S: State>: ObservableObject {
     }
     
     public func dispatch(action: Action) {
-        enqueueAction(action: action)
+        prepare(action: action)
+        actions.send(action)
     }
     
     // Dispatch Implicit Action to the middleware without payload
@@ -177,9 +178,6 @@ open class Store<S: State>: ObservableObject {
     
     private func processActions() {
         actions
-            .flatMap(maxPublishers: .max(1)) {
-                Just($0)
-            }
             .subscribe(on: DispatchQueue.global())
             .receive(on: DispatchQueue.main)
             .sink { [weak self] (action) in
@@ -196,9 +194,6 @@ open class Store<S: State>: ObservableObject {
         let actionName = action.name
         guard let job = self.actionJobMap[actionName] else { return }
         job.middlewares.publisher
-            .flatMap(maxPublishers: .max(1)) {
-                Just($0)
-            }
             .subscribe(on: DispatchQueue.global())
             .tryReduce(state, { [weak self] s, m in
                 guard let strongSelf = self else { return s }
@@ -225,9 +220,6 @@ open class Store<S: State>: ObservableObject {
         guard let job = self.actionJobMap[actionName] else { return }
         job.reducers
             .publisher
-            .flatMap(maxPublishers: .max(1)) {
-                Just($0)
-            }
             .subscribe(on: DispatchQueue.global())
             .reduce(state, { newState, reducer in
                 return reducer(newState, action)
