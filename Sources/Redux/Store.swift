@@ -33,8 +33,7 @@ open class Store<S: State>: ObservableObject {
     }
     
     public func dispatch(action: Action) {
-        prepare(action: action)
-        actions.send(action)
+        enqueueAction(action: action)
     }
     
     // Dispatch Implicit Action to the middleware without payload
