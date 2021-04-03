@@ -201,17 +201,8 @@ open class Store<S: State>: ObservableObject {
                 return s
             })
             .receive(on: DispatchQueue.global(qos: .background))
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        self?.state.error = (error, action)
-                    }
-                }
+            .sink(receiveCompletion: { _ in
             }, receiveValue: { [weak self] _ in
-                self?.state.error = nil
                 self?.processReducers(action: action)
             })
             .store(in: &cancellables)

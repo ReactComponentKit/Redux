@@ -10,7 +10,6 @@ import Foundation
 public typealias StateMutation<S: State> = (inout S, S) -> Swift.Void
 
 public protocol State {
-    var error: (Error, Action)? { get set }
     init()
 }
 
@@ -23,5 +22,4 @@ extension State {
 }
 
 internal struct EmptyState: State {
-    var error: (Error, Action)?
 }
