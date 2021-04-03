@@ -38,8 +38,13 @@ struct UpdateContentAction: Action {
 
 func fetchContent(state: AsyncState, action: Action, sideEffect: @escaping SideEffect<AsyncState>) {
     let (dispatch, context) = sideEffect()
+    guard
+        let strongContext = context,
+        let store: AsyncStore = strongContext.store()
+    else {
+        return
+    }
     
-    let store: AsyncStore = context.store()
     print(store.shareVariableAmongMiddlewares)
     
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
@@ -56,7 +61,7 @@ func fetchContent(state: AsyncState, action: Action, sideEffect: @escaping SideE
             let value = String(data: data, encoding: .utf8) ?? ""
             dispatch(UpdateContentAction(content: .success(value: value)))
         }
-        .store(in: &context.cancellables)
+        .cancel(with: strongContext.cancelBag)
 }
 
 func updateContent(state: AsyncState, action: Action) -> AsyncState {

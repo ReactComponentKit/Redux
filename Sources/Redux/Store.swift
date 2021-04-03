@@ -17,7 +17,7 @@ open class Store<S: State>: ObservableObject {
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
     private var actionJobMap: [String: Job<S>] = [:]
-    public var cancellables: Set<AnyCancellable> = Set()
+    public let cancelBag = CancelBag()
     
     // for testing
     internal var testResultHandler: ((S) -> Swift.Void)?
@@ -133,8 +133,8 @@ open class Store<S: State>: ObservableObject {
         dispatch(action: action)
     }
     
-    public func store<STORE: Store<S>>() -> STORE {
-        return self as! STORE
+    public func store<STORE: Store<S>>() -> STORE? {
+        return self as? STORE
     }
     
     open func prepareStore() {
@@ -187,7 +187,8 @@ open class Store<S: State>: ObservableObject {
                     strongSelf.processMiddlewares(action: action)
                 }
             }
-            .store(in: &cancellables)
+            //.store(in: &cancellables)
+            .cancel(with: cancelBag)
     }
     
     private func processMiddlewares(action: Action) {
@@ -205,7 +206,8 @@ open class Store<S: State>: ObservableObject {
             }, receiveValue: { [weak self] _ in
                 self?.processReducers(action: action)
             })
-            .store(in: &cancellables)
+//            .store(in: &cancellables)
+            .cancel(with: cancelBag)
     }
     
     private func processReducers(action: Action) {
@@ -241,7 +243,8 @@ open class Store<S: State>: ObservableObject {
                 }
                 strongSelf.actionQueue = []
             })
-            .store(in: &cancellables)
+//            .store(in: &cancellables)
+            .cancel(with: cancelBag)
     }
 }
 
