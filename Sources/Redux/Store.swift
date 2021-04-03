@@ -178,8 +178,8 @@ open class Store<S: State>: ObservableObject {
     
     private func processActions() {
         actions
-            .subscribe(on: DispatchQueue.global())
-            .receive(on: DispatchQueue.main)
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.global(qos: .background))
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
                 let currentAction = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action)
@@ -194,13 +194,13 @@ open class Store<S: State>: ObservableObject {
         let actionName = action.name
         guard let job = self.actionJobMap[actionName] else { return }
         job.middlewares.publisher
-            .subscribe(on: DispatchQueue.global())
+            .subscribe(on: DispatchQueue.global(qos: .background))
             .tryReduce(state, { [weak self] s, m in
                 guard let strongSelf = self else { return s }
                 try m(s, action, strongSelf.handleSideEffect)
                 return s
             })
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.global(qos: .background))
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
@@ -220,7 +220,7 @@ open class Store<S: State>: ObservableObject {
         guard let job = self.actionJobMap[actionName] else { return }
         job.reducers
             .publisher
-            .subscribe(on: DispatchQueue.global())
+            .subscribe(on: DispatchQueue.global(qos: .background))
             .reduce(state, { newState, reducer in
                 return reducer(newState, action)
             })
