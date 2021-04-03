@@ -9,7 +9,6 @@ import Foundation
 
 struct CounterState: State {
     var count: Int = 0
-    var error: (Error, Action)?
 }
 
 class CounterStore: Store<CounterState> {

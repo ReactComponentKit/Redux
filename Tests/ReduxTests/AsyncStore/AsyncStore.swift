@@ -9,7 +9,6 @@ import Foundation
 import Combine
 
 struct AsyncState: State {
-    var error: (Error, Action)?
     var content: Async<String> = .uninitialized
 }
 
@@ -37,26 +36,30 @@ struct UpdateContentAction: Action {
 }
 
 func fetchContent(state: AsyncState, action: Action, sideEffect: @escaping SideEffect<AsyncState>) {
-    let (dispatch, context) = sideEffect()
+    guard
+        let context = sideEffect(),
+        let store: AsyncStore = context.store()
+    else {
+        return
+    }
     
-    let store: AsyncStore = context.store()
     print(store.shareVariableAmongMiddlewares)
     
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())
-        .sink { (completion) in
+        .sink { [weak context] (completion) in
             switch completion {
             case .finished:
                 break
             case .failure(let error):
-                dispatch(UpdateContentAction(content: .failed(error: error)))
+                context?.dispatch(action: UpdateContentAction(content: .failed(error: error)))
             }
-        } receiveValue: { (data, response) in
+        } receiveValue: { [weak context] (data, response) in
             let value = String(data: data, encoding: .utf8) ?? ""
-            dispatch(UpdateContentAction(content: .success(value: value)))
+            context?.dispatch(action: UpdateContentAction(content: .success(value: value)))
         }
-        .store(in: &context.cancellables)
+        .cancel(with: context.cancellable)
 }
 
 func updateContent(state: AsyncState, action: Action) -> AsyncState {

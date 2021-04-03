@@ -12,12 +12,11 @@ import Combine
 open class Store<S: State>: ObservableObject {
     @Published
     public private(set) var state: S
-    
     private var actions = PassthroughSubject<Action, Never>()
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
     private var actionJobMap: [String: Job<S>] = [:]
-    public var cancellables: Set<AnyCancellable> = Set()
+    public let cancellable = CancelBag()
     
     // for testing
     internal var testResultHandler: ((S) -> Swift.Void)?
@@ -133,17 +132,17 @@ open class Store<S: State>: ObservableObject {
         dispatch(action: action)
     }
     
-    public func store<STORE: Store<S>>() -> STORE {
-        return self as! STORE
+    public func store<STORE: Store<S>>() -> STORE? {
+        return self as? STORE
     }
     
     open func prepareStore() {
         // Override this function if you need to do some job for preparing store.
     }
     
-    open func beforeProcessingAction(state: S, action: Action) -> Action {
+    open func beforeProcessingAction(state: S, action: Action) -> (S, Action)? {
         // Override this function if need some job before processing action.
-        return action
+        return (state, action)
     }
     
     open func afterProcessingAction(state: S, action: Action) {
@@ -172,61 +171,77 @@ open class Store<S: State>: ObservableObject {
         }
     }
         
-    private func handleSideEffect() -> (ActionDispatcher, Store<S>) {
-        return (enqueueAction, self)
+    private func handleSideEffect() -> Store<S>? {
+        return self
     }
     
     private func processActions() {
         actions
-            .subscribe(on: DispatchQueue.global())
-            .receive(on: DispatchQueue.main)
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.global(qos: .background))
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
-                let currentAction = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action)
-                if type(of: currentAction) != CancelAction.self {
+                if let (mutatedState, currentAction) = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action) {
+                    DispatchQueue.main.async {
+                        strongSelf.state = mutatedState
+                        if type(of: currentAction) != CancelAction.self {
+                            strongSelf.processMiddlewares(action: action)
+                        }
+                    }
+                } else {
                     strongSelf.processMiddlewares(action: action)
                 }
             }
-            .store(in: &cancellables)
+            .cancel(with: cancellable)
     }
     
     private func processMiddlewares(action: Action) {
+        weak var weakSelf: Store<S>? = self
         let actionName = action.name
-        guard let job = self.actionJobMap[actionName] else { return }
+        
+        guard
+            let strongSelf = weakSelf,
+            let job = strongSelf.actionJobMap[actionName]
+        else {
+            return
+        }
+        
         job.middlewares.publisher
-            .subscribe(on: DispatchQueue.global())
-            .tryReduce(state, { [weak self] s, m in
-                guard let strongSelf = self else { return s }
-                try m(s, action, strongSelf.handleSideEffect)
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .reduce(strongSelf.state, { [weak strongSelf] s, m in
+                guard let strongSelf = strongSelf else { return s }
+                m(s, action, strongSelf.handleSideEffect)
                 return s
             })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    self?.state.error = (error, action)
-                }
-            }, receiveValue: { [weak self] _ in
-                self?.state.error = nil
-                self?.processReducers(action: action)
+            .receive(on: DispatchQueue.global(qos: .background))
+            .sink(receiveCompletion: { _ in
+            }, receiveValue: { [weak strongSelf] _ in
+                guard let strongSelf = strongSelf else { return }
+                strongSelf.processReducers(action: action)
             })
-            .store(in: &cancellables)
+            .cancel(with: strongSelf.cancellable)
     }
     
     private func processReducers(action: Action) {
+        weak var weakSelf: Store<S>? = self
         let actionName = action.name
-        guard let job = self.actionJobMap[actionName] else { return }
+        
+        guard
+            let strongSelf = weakSelf,
+            let job = strongSelf.actionJobMap[actionName]
+        else {
+            return
+        }
+        
         job.reducers
             .publisher
-            .subscribe(on: DispatchQueue.global())
-            .reduce(state, { newState, reducer in
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .reduce(strongSelf.state, { newState, reducer in
                 return reducer(newState, action)
             })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] state in
-                guard let strongSelf = self else { return }
+            .sink(receiveValue: { [weak strongSelf] state in
+                guard let strongSelf = strongSelf else { return }
                 // update state
                 job.onNewState?(&strongSelf.state, state)
                 
@@ -248,7 +263,7 @@ open class Store<S: State>: ObservableObject {
                 }
                 strongSelf.actionQueue = []
             })
-            .store(in: &cancellables)
+            .cancel(with: strongSelf.cancellable)
     }
 }
 

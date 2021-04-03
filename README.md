@@ -25,14 +25,19 @@ enum MyError: Error {
 }
 
 func asyncJob(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
-    let (dispatch, _) = sideEffect()
+    guard let conext = sideEffect() else { return }
     Thread.sleep(forTimeInterval: 2)
-    dispatch(IncrementAction(payload: 2))
+    context.dispatch(action: IncrementAction(payload: 2))
 }
 
-func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) throws {
-    Thread.sleep(forTimeInterval: 20)
-    throw MyError.tempError
+func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
+    Thread.sleep(forTimeInterval: 2)
+    let context = sideEffect()
+    context?.dispatch(\.error, payload: (MyError.tempError, action)) { (state, error) -> AppState in
+        return state.copy { mutable in
+            mutable.error = error
+        }
+    }
 }
 ```
 
@@ -99,9 +104,14 @@ struct TestAsyncErrorAction: Action {
 
 ```swift
 class AppStore: Store<AppState> {
-    override func beforeProcessingAction(state: AppState, action: Action) -> Action {
+    override func beforeProcessingAction(state: AppState, action: Action) -> (AppState, Action)? {
         // do whatever you need to
-        return action
+        return (
+            state.copy({ mutation in
+                mutation.error = nil
+            }),
+            action
+        )
     }
 
     override func afterProcessingAction(state: AppState, action: Action) {
@@ -117,7 +127,6 @@ class AppStore: Store<AppState> {
 ```swift
 struct AppState: State {
     var content: Async<String> = .uninitialized
-    var error: (Error, Action)?
 }
 ```
 
@@ -125,7 +134,11 @@ struct AppState: State {
 
 ```swift
 func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
-    var (dispatch, context) = sideEffect()
+    guard 
+        let context = sideEffect()
+    else {
+        return
+    }
     
     // if you need to access the store
     let store: AppStore = context.store()
@@ -133,18 +146,18 @@ func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEff
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())
-        .sink { (completion) in
+        .sink { [weak context] (completion) in
             switch completion {
             case .finished:
                 break
             case .failure(let error):
-                dispatch(UpdateContentAction(content: .failed(error: error)))
+                context.dispatch(action: UpdateContentAction(content: .failed(error: error)))
             }
-        } receiveValue: { (data, response) in
+        } receiveValue: { [weak context] (data, response) in
             let value = String(data: data, encoding: .utf8) ?? ""
-            dispatch(UpdateContentAction(content: .success(value: value)))
+            context.dispatch(action: UpdateContentAction(content: .success(value: value)))
         }
-        .store(in: &context.cancellable)
+        .cancel(with: context.cancellable)
 
 }
 ```
@@ -205,7 +218,6 @@ import Foundation
 
 struct CounterState: State {
     var count: Int = 0
-    var error: (Error, Action)?
 }
 
 class CounterStore: Store<CounterState> {
@@ -364,4 +376,3 @@ final class CounterStoreTests: XCTestCase {
 }
 
 ```
-

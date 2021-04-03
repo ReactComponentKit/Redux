@@ -28,6 +28,7 @@
 		4E7E6E5525D17D2C008D351E /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7E6E4F25D17D28008D351E /* Test.swift */; };
 		4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84E62C25CFA4C900A83AC8 /* Job.swift */; };
 		4E935AFF25D8C38900A3432B /* ConvenientDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E935AFE25D8C38900A3432B /* ConvenientDispatchTests.swift */; };
+		4EF111C32618405800978E61 /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF111C22618405800978E61 /* CancelBag.swift */; };
 		OBJ_30 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Action.swift */; };
 		OBJ_31 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* ActionDispatcher.swift */; };
 		OBJ_32 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Middleware.swift */; };
@@ -65,6 +66,7 @@
 		4E7E6E4F25D17D28008D351E /* Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Test.swift; path = Tests/Test.swift; sourceTree = "<group>"; };
 		4E84E62C25CFA4C900A83AC8 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
 		4E935AFE25D8C38900A3432B /* ConvenientDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvenientDispatchTests.swift; sourceTree = "<group>"; };
+		4EF111C22618405800978E61 /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
 		OBJ_10 /* ActionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDispatcher.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Middleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
 		OBJ_12 /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 				OBJ_13 /* State.swift */,
 				OBJ_14 /* Store.swift */,
 				4E84E62C25CFA4C900A83AC8 /* Job.swift */,
+				4EF111C22618405800978E61 /* CancelBag.swift */,
 			);
 			name = Redux;
 			path = Sources/Redux;
@@ -277,6 +280,7 @@
 				OBJ_33 /* Reducer.swift in Sources */,
 				4E7E6DEC25D13610008D351E /* Async.swift in Sources */,
 				OBJ_34 /* State.swift in Sources */,
+				4EF111C32618405800978E61 /* CancelBag.swift in Sources */,
 				4E84E62D25CFA4C900A83AC8 /* Job.swift in Sources */,
 				OBJ_35 /* Store.swift in Sources */,
 			);

@@ -645,6 +645,7 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Pods
   - Tests
   - Package.swift
+  - Sources/Redux/CancelBag.swift
 
 attributes:
   always_on_same_line: ["@IBAction", "@IBSegueAction", "@NSManaged", "@discardableResult", "@escaping", "@objc"]
