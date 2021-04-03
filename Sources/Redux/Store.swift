@@ -206,7 +206,9 @@ open class Store<S: State>: ObservableObject {
                 case .finished:
                     break
                 case .failure(let error):
-                    self?.state.error = (error, action)
+                    DispatchQueue.main.async {
+                        self?.state.error = (error, action)
+                    }
                 }
             }, receiveValue: { [weak self] _ in
                 self?.state.error = nil
