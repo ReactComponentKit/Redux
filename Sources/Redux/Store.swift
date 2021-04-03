@@ -182,9 +182,11 @@ open class Store<S: State>: ObservableObject {
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
                 if let (mutatedState, currentAction) = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action) {
-                    strongSelf.state = mutatedState
-                    if type(of: currentAction) != CancelAction.self {
-                        strongSelf.processMiddlewares(action: action)
+                    DispatchQueue.main.async {
+                        strongSelf.state = mutatedState
+                        if type(of: currentAction) != CancelAction.self {
+                            strongSelf.processMiddlewares(action: action)
+                        }
                     }
                 } else {
                     strongSelf.processMiddlewares(action: action)
