@@ -195,9 +195,9 @@ open class Store<S: State>: ObservableObject {
         guard let job = self.actionJobMap[actionName] else { return }
         job.middlewares.publisher
             .subscribe(on: DispatchQueue.global(qos: .background))
-            .tryReduce(state, { [weak self] s, m in
+            .reduce(state, { [weak self] s, m in
                 guard let strongSelf = self else { return s }
-                try m(s, action, strongSelf.handleSideEffect)
+                m(s, action, strongSelf.handleSideEffect)
                 return s
             })
             .receive(on: DispatchQueue.global(qos: .background))
