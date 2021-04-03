@@ -25,14 +25,14 @@ enum MyError: Error {
 }
 
 func asyncJob(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
-    let (dispatch, _) = sideEffect()
+    guard let conext = sideEffect() else { return }
     Thread.sleep(forTimeInterval: 2)
-    dispatch(IncrementAction(payload: 2))
+    context.dispatch(action: IncrementAction(payload: 2))
 }
 
 func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
     Thread.sleep(forTimeInterval: 2)
-    let (_, context) = sideEffect()
+    let context = sideEffect()
     context?.dispatch(\.error, payload: (MyError.tempError, action)) { (state, error) -> AppState in
         return state.copy { mutable in
             mutable.error = error
@@ -134,7 +134,11 @@ struct AppState: State {
 
 ```swift
 func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
-    var (dispatch, context) = sideEffect()
+    guard 
+        let context = sideEffect()
+    else {
+        return
+    }
     
     // if you need to access the store
     let store: AppStore = context.store()
@@ -142,18 +146,18 @@ func fetchContent(state: AppState, action: Action, sideEffect: @escaping SideEff
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())
-        .sink { (completion) in
+        .sink { [weak context] (completion) in
             switch completion {
             case .finished:
                 break
             case .failure(let error):
-                dispatch(UpdateContentAction(content: .failed(error: error)))
+                context.dispatch(action: UpdateContentAction(content: .failed(error: error)))
             }
-        } receiveValue: { (data, response) in
+        } receiveValue: { [weak context] (data, response) in
             let value = String(data: data, encoding: .utf8) ?? ""
-            dispatch(UpdateContentAction(content: .success(value: value)))
+            context.dispatch(action: UpdateContentAction(content: .success(value: value)))
         }
-        .store(in: &context.cancellable)
+        .cancel(with: context.cancellable)
 
 }
 ```

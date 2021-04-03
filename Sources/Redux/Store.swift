@@ -16,7 +16,7 @@ open class Store<S: State>: ObservableObject {
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
     private var actionJobMap: [String: Job<S>] = [:]
-    public let cancelBag = CancelBag()
+    public let cancellable = CancelBag()
     
     // for testing
     internal var testResultHandler: ((S) -> Swift.Void)?
@@ -171,8 +171,8 @@ open class Store<S: State>: ObservableObject {
         }
     }
         
-    private func handleSideEffect() -> (ActionDispatcher, Store<S>) {
-        return (enqueueAction, self)
+    private func handleSideEffect() -> Store<S>? {
+        return self
     }
     
     private func processActions() {
@@ -192,7 +192,7 @@ open class Store<S: State>: ObservableObject {
                     strongSelf.processMiddlewares(action: action)
                 }
             }
-            .cancel(with: cancelBag)
+            .cancel(with: cancellable)
     }
     
     private func processMiddlewares(action: Action) {
@@ -219,7 +219,7 @@ open class Store<S: State>: ObservableObject {
                 guard let strongSelf = strongSelf else { return }
                 strongSelf.processReducers(action: action)
             })
-            .cancel(with: cancelBag)
+            .cancel(with: strongSelf.cancellable)
     }
     
     private func processReducers(action: Action) {
@@ -263,7 +263,7 @@ open class Store<S: State>: ObservableObject {
                 }
                 strongSelf.actionQueue = []
             })
-            .cancel(with: strongSelf.cancelBag)
+            .cancel(with: strongSelf.cancellable)
     }
 }
 

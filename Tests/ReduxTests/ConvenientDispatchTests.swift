@@ -53,7 +53,7 @@ class ConvenientDispatchTests: XCTestCase {
     func testDispatchActionReducerWithMiddleware() {
         let test = Test<MyState>()
         test.dispatch(payload: "1234") { (state, value, sideEffect) in
-            let(_, context) = sideEffect()
+            let context = sideEffect()
             Thread.sleep(forTimeInterval: 1)
             context?.dispatch(\.value, payload: value + "5678") { (state, value) -> MyState in
                 return state.copy { mutation in
@@ -68,7 +68,7 @@ class ConvenientDispatchTests: XCTestCase {
         }
         
         test.dispatch(payload: 100) { (state, value, sideEffect) in
-            let(_, context) = sideEffect()
+            let context = sideEffect()
             Thread.sleep(forTimeInterval: 1)
             context?.dispatch(\.value, payload: "\(value),200") { (state, value) -> MyState in
                 return state.copy { mutation in
@@ -100,7 +100,7 @@ class ConvenientDispatchTests: XCTestCase {
     func testUpdateAsyncValue() {
         let test = Test<MyState>()
         test.dispatch { (state, sideEffect) in
-            let (_, context) = sideEffect()
+            let context = sideEffect()
             context?.updateAsync(\.asyncValue, payload: .loading)
         }
         .test { (state) in
@@ -108,7 +108,7 @@ class ConvenientDispatchTests: XCTestCase {
         }
         .dispatch(payload: "Hello", middleware: { (state, value, sideEffect) in
             Thread.sleep(forTimeInterval: 3)
-            let (_, context) = sideEffect()
+            let context = sideEffect()
             context?.updateAsync(\.asyncValue, payload: .success(value: value))
         })
         .test { state in

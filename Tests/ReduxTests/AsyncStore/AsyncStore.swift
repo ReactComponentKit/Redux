@@ -36,10 +36,9 @@ struct UpdateContentAction: Action {
 }
 
 func fetchContent(state: AsyncState, action: Action, sideEffect: @escaping SideEffect<AsyncState>) {
-    let (dispatch, context) = sideEffect()
     guard
-        let strongContext = context,
-        let store: AsyncStore = strongContext.store()
+        let context = sideEffect(),
+        let store: AsyncStore = context.store()
     else {
         return
     }
@@ -49,18 +48,18 @@ func fetchContent(state: AsyncState, action: Action, sideEffect: @escaping SideE
     URLSession.shared.dataTaskPublisher(for: URL(string: "https://www.google.com")!)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.global())
-        .sink { (completion) in
+        .sink { [weak context] (completion) in
             switch completion {
             case .finished:
                 break
             case .failure(let error):
-                dispatch(UpdateContentAction(content: .failed(error: error)))
+                context?.dispatch(action: UpdateContentAction(content: .failed(error: error)))
             }
-        } receiveValue: { (data, response) in
+        } receiveValue: { [weak context] (data, response) in
             let value = String(data: data, encoding: .utf8) ?? ""
-            dispatch(UpdateContentAction(content: .success(value: value)))
+            context?.dispatch(action: UpdateContentAction(content: .success(value: value)))
         }
-        .cancel(with: strongContext.cancelBag)
+        .cancel(with: context.cancellable)
 }
 
 func updateContent(state: AsyncState, action: Action) -> AsyncState {
