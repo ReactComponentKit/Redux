@@ -12,7 +12,6 @@ import Combine
 open class Store<S: State>: ObservableObject {
     @Published
     public private(set) var state: S
-    
     private var actions = PassthroughSubject<Action, Never>()
     private var actionQueue: [Action] = []
     private let actionQueueMutex = DispatchSemaphore(value: 1)
@@ -141,9 +140,9 @@ open class Store<S: State>: ObservableObject {
         // Override this function if you need to do some job for preparing store.
     }
     
-    open func beforeProcessingAction(state: S, action: Action) -> Action {
+    open func beforeProcessingAction(state: S, action: Action) -> (S, Action)? {
         // Override this function if need some job before processing action.
-        return action
+        return (state, action)
     }
     
     open func afterProcessingAction(state: S, action: Action) {
@@ -182,8 +181,12 @@ open class Store<S: State>: ObservableObject {
             .receive(on: DispatchQueue.global(qos: .background))
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
-                let currentAction = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action)
-                if type(of: currentAction) != CancelAction.self {
+                if let (mutatedState, currentAction) = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action) {
+                    strongSelf.state = mutatedState
+                    if type(of: currentAction) != CancelAction.self {
+                        strongSelf.processMiddlewares(action: action)
+                    }
+                } else {
                     strongSelf.processMiddlewares(action: action)
                 }
             }
@@ -203,7 +206,7 @@ open class Store<S: State>: ObservableObject {
         
         job.middlewares.publisher
             .subscribe(on: DispatchQueue.global(qos: .background))
-            .reduce(state, { [weak strongSelf] s, m in
+            .reduce(strongSelf.state, { [weak strongSelf] s, m in
                 guard let strongSelf = strongSelf else { return s }
                 m(s, action, strongSelf.handleSideEffect)
                 return s
@@ -231,7 +234,7 @@ open class Store<S: State>: ObservableObject {
         job.reducers
             .publisher
             .subscribe(on: DispatchQueue.global(qos: .background))
-            .reduce(state, { newState, reducer in
+            .reduce(strongSelf.state, { newState, reducer in
                 return reducer(newState, action)
             })
             .receive(on: DispatchQueue.main)
