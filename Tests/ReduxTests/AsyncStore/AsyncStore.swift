@@ -9,7 +9,6 @@ import Foundation
 import Combine
 
 struct AsyncState: State {
-    var error: (Error, Action)?
     var content: Async<String> = .uninitialized
 }
 

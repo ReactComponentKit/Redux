@@ -30,9 +30,14 @@ func asyncJob(state: AppState, action: Action, sideEffect: @escaping SideEffect<
     dispatch(IncrementAction(payload: 2))
 }
 
-func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) throws {
-    Thread.sleep(forTimeInterval: 20)
-    throw MyError.tempError
+func asyncJobWithError(state: AppState, action: Action, sideEffect: @escaping SideEffect<AppState>) {
+    Thread.sleep(forTimeInterval: 2)
+    let (_, context) = sideEffect()
+    context?.dispatch(\.error, payload: (MyError.tempError, action)) { (state, error) -> AppState in
+        return state.copy { mutable in
+            mutable.error = error
+        }
+    }
 }
 ```
 
@@ -99,9 +104,14 @@ struct TestAsyncErrorAction: Action {
 
 ```swift
 class AppStore: Store<AppState> {
-    override func beforeProcessingAction(state: AppState, action: Action) -> Action {
+    override func beforeProcessingAction(state: AppState, action: Action) -> (AppState, Action)? {
         // do whatever you need to
-        return action
+        return (
+            state.copy({ mutation in
+                mutation.error = nil
+            }),
+            action
+        )
     }
 
     override func afterProcessingAction(state: AppState, action: Action) {
@@ -117,7 +127,6 @@ class AppStore: Store<AppState> {
 ```swift
 struct AppState: State {
     var content: Async<String> = .uninitialized
-    var error: (Error, Action)?
 }
 ```
 
@@ -205,7 +214,6 @@ import Foundation
 
 struct CounterState: State {
     var count: Int = 0
-    var error: (Error, Action)?
 }
 
 class CounterStore: Store<CounterState> {
@@ -364,4 +372,3 @@ final class CounterStoreTests: XCTestCase {
 }
 
 ```
-
