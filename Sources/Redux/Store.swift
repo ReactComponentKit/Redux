@@ -187,32 +187,47 @@ open class Store<S: State>: ObservableObject {
                     strongSelf.processMiddlewares(action: action)
                 }
             }
-            //.store(in: &cancellables)
             .cancel(with: cancelBag)
     }
     
     private func processMiddlewares(action: Action) {
+        weak var weakSelf: Store<S>? = self
         let actionName = action.name
-        guard let job = self.actionJobMap[actionName] else { return }
+        
+        guard
+            let strongSelf = weakSelf,
+            let job = strongSelf.actionJobMap[actionName]
+        else {
+            return
+        }
+        
         job.middlewares.publisher
             .subscribe(on: DispatchQueue.global(qos: .background))
-            .reduce(state, { [weak self] s, m in
-                guard let strongSelf = self else { return s }
+            .reduce(state, { [weak strongSelf] s, m in
+                guard let strongSelf = strongSelf else { return s }
                 m(s, action, strongSelf.handleSideEffect)
                 return s
             })
             .receive(on: DispatchQueue.global(qos: .background))
             .sink(receiveCompletion: { _ in
-            }, receiveValue: { [weak self] _ in
-                self?.processReducers(action: action)
+            }, receiveValue: { [weak strongSelf] _ in
+                guard let strongSelf = strongSelf else { return }
+                strongSelf.processReducers(action: action)
             })
-//            .store(in: &cancellables)
             .cancel(with: cancelBag)
     }
     
     private func processReducers(action: Action) {
+        weak var weakSelf: Store<S>? = self
         let actionName = action.name
-        guard let job = self.actionJobMap[actionName] else { return }
+        
+        guard
+            let strongSelf = weakSelf,
+            let job = strongSelf.actionJobMap[actionName]
+        else {
+            return
+        }
+        
         job.reducers
             .publisher
             .subscribe(on: DispatchQueue.global(qos: .background))
@@ -220,8 +235,8 @@ open class Store<S: State>: ObservableObject {
                 return reducer(newState, action)
             })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] state in
-                guard let strongSelf = self else { return }
+            .sink(receiveValue: { [weak strongSelf] state in
+                guard let strongSelf = strongSelf else { return }
                 // update state
                 job.onNewState?(&strongSelf.state, state)
                 
@@ -243,8 +258,7 @@ open class Store<S: State>: ObservableObject {
                 }
                 strongSelf.actionQueue = []
             })
-//            .store(in: &cancellables)
-            .cancel(with: cancelBag)
+            .cancel(with: strongSelf.cancelBag)
     }
 }
 
