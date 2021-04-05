@@ -142,7 +142,7 @@ open class Store<S: State>: ObservableObject {
     
     open func beforeProcessingAction(state: S, action: Action) -> (S, Action)? {
         // Override this function if need some job before processing action.
-        return (state, action)
+        return nil
     }
     
     open func afterProcessingAction(state: S, action: Action) {
@@ -177,8 +177,8 @@ open class Store<S: State>: ObservableObject {
     
     private func processActions() {
         actions
-            .subscribe(on: DispatchQueue.global(qos: .background))
-            .receive(on: DispatchQueue.global(qos: .background))
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.global())
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
                 if let (mutatedState, currentAction) = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action) {
@@ -207,13 +207,13 @@ open class Store<S: State>: ObservableObject {
         }
         
         job.middlewares.publisher
-            .subscribe(on: DispatchQueue.global(qos: .background))
+            .subscribe(on: DispatchQueue.global())
             .reduce(strongSelf.state, { [weak strongSelf] s, m in
                 guard let strongSelf = strongSelf else { return s }
                 m(s, action, strongSelf.handleSideEffect)
                 return s
             })
-            .receive(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.global())
             .sink(receiveCompletion: { _ in
             }, receiveValue: { [weak strongSelf] _ in
                 guard let strongSelf = strongSelf else { return }
@@ -235,7 +235,7 @@ open class Store<S: State>: ObservableObject {
         
         job.reducers
             .publisher
-            .subscribe(on: DispatchQueue.global(qos: .background))
+            .subscribe(on: DispatchQueue.global())
             .reduce(strongSelf.state, { newState, reducer in
                 return reducer(newState, action)
             })
