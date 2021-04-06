@@ -140,11 +140,6 @@ open class Store<S: State>: ObservableObject {
         // Override this function if you need to do some job for preparing store.
     }
     
-    open func beforeProcessingAction(state: S, action: Action) -> (S, Action)? {
-        // Override this function if need some job before processing action.
-        return nil
-    }
-    
     open func afterProcessingAction(state: S, action: Action) {
         // Override this function if need some job after processing action.
     }
@@ -181,16 +176,7 @@ open class Store<S: State>: ObservableObject {
             .receive(on: DispatchQueue.global())
             .sink { [weak self] (action) in
                 guard let strongSelf = self else { return }
-                if let (mutatedState, currentAction) = strongSelf.beforeProcessingAction(state: strongSelf.state, action: action) {
-                    DispatchQueue.main.async {
-                        strongSelf.state = mutatedState
-                        if type(of: currentAction) != CancelAction.self {
-                            strongSelf.processMiddlewares(action: action)
-                        }
-                    }
-                } else {
-                    strongSelf.processMiddlewares(action: action)
-                }
+                strongSelf.processMiddlewares(action: action)
             }
             .cancel(with: cancellable)
     }

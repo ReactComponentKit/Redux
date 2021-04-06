@@ -104,16 +104,6 @@ struct TestAsyncErrorAction: Action {
 
 ```swift
 class AppStore: Store<AppState> {
-    override func beforeProcessingAction(state: AppState, action: Action) -> (AppState, Action)? {
-        // do whatever you need to
-        return (
-            state.copy({ mutation in
-                mutation.error = nil
-            }),
-            action
-        )
-    }
-
     override func afterProcessingAction(state: AppState, action: Action) {
         // do whatever you need to
         print("[## \(action) ##]")
