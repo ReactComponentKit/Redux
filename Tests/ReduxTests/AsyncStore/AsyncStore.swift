@@ -12,7 +12,7 @@ struct AsyncState: State {
     var content: Async<String> = .uninitialized
 }
 
-class AsyncStore: Store<AsyncState> {
+class AsyncStore: Store<AsyncState>, ObservableObject {
     // something likes Core Data Contexts
     public var shareVariableAmongMiddlewares = "Hello Middleware!"
 }

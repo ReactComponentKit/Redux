@@ -11,7 +11,7 @@ struct CounterState: State {
     var count: Int = 0
 }
 
-class CounterStore: Store<CounterState> {
+class CounterStore: Store<CounterState>, ObservableObject {
 }
 
 struct IncrementAction: Action {

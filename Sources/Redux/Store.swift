@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 @dynamicMemberLookup
-open class Store<S: State>: ObservableObject {
+open class Store<S: State> {
     @Published
     public private(set) var state: S
     private var actions = PassthroughSubject<Action, Never>()
