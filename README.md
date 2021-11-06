@@ -172,7 +172,7 @@ class CounterStore: Store<Counter> {
 ```
 
 
-## Middleware 정의
+## Middleware
 
 You can optionally add middlewares. Middleware is a collection of functions called before or after all Mutations.
 
