@@ -2,6 +2,11 @@
 
 # Redux
 
+![license MIT](https://img.shields.io/cocoapods/l/Redux.svg)
+![Platform](https://img.shields.io/badge/iOS-%3E%3D%2015.0-green.svg)
+![Platform](https://img.shields.io/badge/macos-%3E%3D%2012.0-green.svg)
+[![Swift 5.5](https://img.shields.io/badge/Swift-5.5-orange.svg?style=flat)](https://developer.apple.com/swift/)
+
 Implementing Redux with async/await introduced in Swift 5.5 has become very simple. From Xcode 13.2, Swift 5.5's new concurrency supports iOS 13. Therefore, the existing Redux package was newly implemented based on async/await.
 
 ## Flow
