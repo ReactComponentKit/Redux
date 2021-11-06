@@ -64,6 +64,7 @@ open class Store<S: State>: ObservableObject {
         }
     }
     
+    @MainActor
     public func commit<P>(mutation: (inout S, P) -> Void, payload: P) {
         doWorksBeforeCommit()
         let original = state
