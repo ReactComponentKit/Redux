@@ -20,7 +20,7 @@ class CounterStore: Store<Counter> {
         super.init(state: Counter())
     }
     
-    // refs or computed
+    // computed
     @Published
     var count = 0
     

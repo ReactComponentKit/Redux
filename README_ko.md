@@ -1,18 +1,16 @@
-[English](./README.md) | [한국어](./README_ko.md)
-
 # Redux
 
-Implementing Redux with async/await introduced in Swift 5.5 has become very simple. From Xcode 13.2, Swift 5.5's new concurrency supports iOS 13. Therefore, the existing Redux package was newly implemented based on async/await.
+Swift 5.5에서 소개된 async/await로 Redux를 구현하는 일이 매우 간소해졌습니다. Xcode 13.2 버전부터는 Swift 5.5의 새로운 Concurrency가 iOS 13을 지원한다고 합니다. 이에 기존의 Redux 패키지를 async/await 를 바탕으로 새로 구현하였습니다.
 
-## Flow
+## 흐름
 
 ![](./arts/flow.png)
 
-The figure above shows the flow of Redux. There's a lot of content, but it's actually very concise. The store handles most of the flow. All the developer has to do is define State and Store and define the functions that perform Action and Mutation. Additionally, middleware-like jobs can be defined so that you can do the necessary tasks before or after Mutation occurs.
+위 그림은 Redux의 흐름을 나타낸 것입니다. 많은 내용이 있지만 실제로는 매우 간결합니다. 흐름 대부분을 Store가 처리합니다. 개발자가 해야할 일은 State와 Store를 정의하고 Action과 Mutation을 수행하는 함수를 정의하는 것 뿐입니다. 추가로 Mutation이 발생하기 전 또는 후에 필요한 작업을 할 수 있도록 미들웨어 성격의 Job을 정의할 수 있습니다.
 
-## State
+## State 정의
 
-State can be defined as below.
+State는 아래와 같이 정의할 수 있습니다.
 
 ```swift
 struct Counter: State {
@@ -20,12 +18,12 @@ struct Counter: State {
 }
 ```
 
-Note that State should comply with Equatable.
+주의할 점은 State는 Equatable을 준수해야 합니다.
 
 
-## Store
+## Store 정의
 
-When defining a store, a state is required. You can define the store as below.
+Store를 정의할 때, State가 필요합니다. 아래와 같이 Store를 정의할 수 있습니다.
 
 ```swift
 struct Counter: State {
@@ -39,17 +37,17 @@ class CounterStore: Store<Counter> {
 }
 ```
 
-The store provides the following methods.
+Store는 다음 메서드를 제공합니다.
 
 - commit(mutation:, payload:)
 - dispatch(action:, payload:) async
 - dispatch(action:, payload:)
 
-When creating a custom store, the method mainly used will be commit(mutation:, payload:). dispatch(action:, payload:) is very rarely used.
+사용자 정의 Store를 만들 때, 주로 사용하는 메서드는 commit(mutation:, payload:)가 될 것 입니다. dispatch(action:, payload:) 는 사용되는 경우가 매우 적습니다.
 
-## Mutation
+## Mutation 정의
 
-Mutation is defined as a store method. The Mutation method is a sync method.
+Mutation은 스토어의 메서드로 정의합니다. Mutation 메서드는 sync 메서드입니다.
 
 ```swift
 // mutation
@@ -62,9 +60,9 @@ private func decrement(counter: inout Counter, payload: Int) {
 }
 ```
 
-## Action
+## Action 정의
 
-Action is also defined by the store's method. There is no need to create a separate custom data type for action anymore.
+Action 도 Store의 메서드로 정의합니다. 더 이상 Action을 위해 따로 struct와 같은 타입을 만들 필요가 없습니다. 
 
 ```swift
 // actions
@@ -87,12 +85,12 @@ func asyncDecrementAction(payload: Int) async {
 }
 ```
 
-Since Action is defined as a store method, there are very few cases where the store's dispatch method is actually used.
+Action을 Store의 메서드로 정의하기 때문에 실제로 Store의 dispatch 메서드를 사용하는 경우는 매우 적습니다.
 
 
 ## Computed
 
-Define the properties to connect to View. Because the store publicizes the state, all properties of the state are public every time. Therefore, when you want to publish only a specific attribute of the state, you can inject a value into that attribute in the computed step.
+View 에 연결할 속성을 정의합니다. Store는 state를 Publish 하기 때문에 매번 상태의 모든 속성이 Publish 됩니다. 따라서 상태의 특정 속성만 Publish 하고자할 때, Computed 단계에서 해당 속성에 값을 주입할 수 있습니다.
 
 ```swift
 class CounterStore: Store<Counter> {
@@ -113,7 +111,7 @@ class CounterStore: Store<Counter> {
 
 ## CounterStore
 
-The entire code of CounterStore defined so far is as follows.
+지금까지 정의한 CounterStore의 전체 코드는 아래와 같습니다.
 
 ```swift
 import Foundation
@@ -169,7 +167,7 @@ class CounterStore: Store<Counter> {
 
 ## Middleware 정의
 
-You can optionally add middlewares. Middleware is a collection of functions called before or after all Mutations.
+선택적으로 Middleware를 추가할 수 있습니다. 미들웨어는 모든 Mutation 전 또는 후에 호출되는 함수 모음입니다.
 
 ```swift
 class WorksBeforeCommitStore: Store<ReduxState> {
@@ -203,7 +201,7 @@ class WorksAfterCommitStore: Store<ReduxState> {
 
 ## UnitTest
 
-It is very easy to test the CounterStore defined above.
+위에서 정의한 CounterStore를 아주 쉽게 테스트할 수 있습니다.
 
 ```swift
 import XCTest
@@ -267,7 +265,7 @@ final class CounterStoreTests: XCTestCase {
 
 ## UserStore
 
-Let's define a store that uses API([https://jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com)).
+[https://jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com) API를 사용하는 Store를 간략하게 작성해 보면 아래와 같습니다.
 
 ```swift
 import Foundation
@@ -329,7 +327,7 @@ class UserStore: Store<UserState> {
 }
 ```
 
-You can test the above UserStore as follows.
+위 UserStore를 아래와 같이 테스트할 수 있습니다.
 
 ```swift
 import XCTest
@@ -378,9 +376,9 @@ final class UserStoreTests: XCTestCase {
 }
 ```
 
-## Store Composition
+## Store 조합
 
-It is necessary to manage the app status in one place with Single Source of Truth. In that case, it is dangerous to define all states of the app in one state. Therefore, it is recommended to divide the state into modules and create and manage a store that manages each state. You can define the App Store as below.
+Single Source of Truth 로 앱 상태를 한 곳에서 관리할 필요가 있습니다. 그럴 때, 한 State에 앱의 모든 State를 정의하는 것은 위험합니다. 그래서 State를 모듈 단위로 나누어서 각 State를 관리하는 Store를 만들어 관리하는 것이 좋습니다. 아래와 같이 AppStore를 정의할 수 있습니다.
 
 
 ```swift
@@ -402,7 +400,7 @@ class AppStore: Store<AppState> {
 }
 ```
 
-You can use the AppStore above as follows.
+위 AppStore를 아래와 같이 사용할 수 있습니다.
 
 ```swift
 import XCTest
@@ -484,25 +482,3 @@ final class SSOTTests: XCTestCase {
     }
 }
 ```
-
-## MIT License
-
-Copyright (c) 2021 Redux, ReactComponentKit
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
