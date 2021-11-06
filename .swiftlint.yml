@@ -222,6 +222,14 @@ disabled_rules: # rule identifiers to exclude from running
   # disable to use force cast in the store's store() method
   - force_cast
 
+  # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
+  # https://github.com/realm/SwiftLint/blob/master/Rules.md#force-unwrapping
+  - force_unwrapping
+
+  # Rationale: Provides consistency of ordering within a type.
+  # https://github.com/realm/SwiftLint/blob/master/Rules.md#type-contents-order
+  - type_contents_order
+
 opt_in_rules: # some rules are only opt-in
 
   # Rationale: When using map, we think of it being used to transform a current array into something else
@@ -359,10 +367,6 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#force-try
   - force_try
-
-  # Rationale: Prevents coder error, doesn't crash, makes coder be explicit about their assumptions
-  # https://github.com/realm/SwiftLint/blob/master/Rules.md#force-unwrapping
-  - force_unwrapping
 
   # Rationale: Provides consistency in coding style and brevity.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#implicit-getter
@@ -619,10 +623,6 @@ opt_in_rules: # some rules are only opt-in
   # Rationale: == is not used for NSObject comparison, and could lead to confusion.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#nsobject-prefer-isequal
   - nsobject_prefer_isequal
-
-  # Rationale: Provides consistency of ordering within a type.
-  # https://github.com/realm/SwiftLint/blob/master/Rules.md#type-contents-order
-  - type_contents_order
 
   # Rationale: Provides consistency in coding style.
   # https://github.com/realm/SwiftLint/blob/master/Rules.md#unused-capture-list
