@@ -92,7 +92,7 @@ Since Action is defined as a store method, there are very few cases where the st
 
 ## Computed
 
-Define the properties to connect to View. Because the store publicizes the state, all properties of the state are public every time. Therefore, when you want to publish only a specific attribute of the state, you can inject a value into that attribute in the computed step.
+Define the properties to connect to View. Because the store publish the state, all properties of the state are published every time. Therefore, when you want to publish only a specific property of the state, you can inject a value into that property in the computed step.
 
 ```swift
 class CounterStore: Store<Counter> {
