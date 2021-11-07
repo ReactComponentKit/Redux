@@ -35,33 +35,37 @@ final class CounterStoreTests: XCTestCase {
         XCTAssertEqual(11, store.state.count)
     }
     
-    func testPublisherValue() {
+    func testPublisherValue() async {
         XCTAssertEqual(0, store.count)
+        
         store.incrementAction(payload: 1)
+        await contextSwitching()
         XCTAssertEqual(1, store.count)
+        
         store.incrementAction(payload: 10)
+        await contextSwitching()
         XCTAssertEqual(11, store.count)
+        
         store.decrementAction(payload: 10)
+        await contextSwitching()
         XCTAssertEqual(1, store.count)
+        
         store.decrementAction(payload: 1)
+        await contextSwitching()
         XCTAssertEqual(0, store.count)
     }
     
     func testAsyncIncrementAction() async {
         await store.asyncIncrementAction(payload: 1)
         XCTAssertEqual(1, store.state.count)
-        XCTAssertEqual(1, store.count)
         await store.asyncIncrementAction(payload: 10)
         XCTAssertEqual(11, store.state.count)
-        XCTAssertEqual(11, store.count)
     }
     
     func testAsyncDecrementAction() async {
         await store.asyncDecrementAction(payload: 1)
         XCTAssertEqual(-1, store.state.count)
-        XCTAssertEqual(-1, store.count)
         await store.asyncDecrementAction(payload: 10)
         XCTAssertEqual(-11, store.state.count)
-        XCTAssertEqual(-11, store.count)
     }
 }

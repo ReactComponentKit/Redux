@@ -105,33 +105,40 @@ final class ReduxTests: XCTestCase {
         XCTAssertEqual(-9, store.state.count)
     }
     
-    func testWorksAfterCommit() {
+    func testWorksAfterCommit() async {
         let store = WorksAfterCommitStore()
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
         }, payload: 1) // 1 * 2 = 2
+        await contextSwitching()
         XCTAssertEqual(2, store.state.count)
+        
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
         }, payload: 1) // 3 * 2 = 6
+        await contextSwitching()
         XCTAssertEqual(6, store.state.count)
     }
     
-    func testComputed() {
+    func testComputed() async {
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
         }, payload: 10)
         XCTAssertEqual(10, store.state.count)
+        
+        await contextSwitching()
         XCTAssertEqual(20, store.doubleCount)
     }
     
-    func testContitionalComputed() {
+    func testContitionalComputed() async {
         for i in 1...10 {
             store.commit(mutation: { mutableState, number in
                 mutableState.count += number
             }, payload: i)
         }
         XCTAssertEqual(55, store.state.count)
+        
+        await contextSwitching()
         XCTAssertEqual(110, store.doubleCount)
         
         // old      new

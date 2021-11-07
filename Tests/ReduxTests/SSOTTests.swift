@@ -56,33 +56,46 @@ final class SSOTTests: XCTestCase {
         XCTAssertEqual(11, store.counter.state.count)
     }
     
-    func testPublisherValue() {
+    func testPublisherValue() async {
         XCTAssertEqual(0, store.counter.count)
         store.counter.incrementAction(payload: 1)
+        await contextSwitching()
         XCTAssertEqual(1, store.counter.count)
+        
         store.counter.incrementAction(payload: 10)
+        await contextSwitching()
         XCTAssertEqual(11, store.counter.count)
+        
         store.counter.decrementAction(payload: 10)
+        await contextSwitching()
         XCTAssertEqual(1, store.counter.count)
+        
         store.counter.decrementAction(payload: 1)
+        await contextSwitching()
         XCTAssertEqual(0, store.counter.count)
     }
     
     func testAsyncIncrementAction() async {
         await store.counter.asyncIncrementAction(payload: 1)
         XCTAssertEqual(1, store.counter.state.count)
+        await contextSwitching()
         XCTAssertEqual(1, store.counter.count)
+        
         await store.counter.asyncIncrementAction(payload: 10)
         XCTAssertEqual(11, store.counter.state.count)
+        await contextSwitching()
         XCTAssertEqual(11, store.counter.count)
     }
     
     func testAsyncDecrementAction() async {
         await store.counter.asyncDecrementAction(payload: 1)
         XCTAssertEqual(-1, store.counter.state.count)
+        await contextSwitching()
         XCTAssertEqual(-1, store.counter.count)
+        
         await store.counter.asyncDecrementAction(payload: 10)
         XCTAssertEqual(-11, store.counter.state.count)
+        await contextSwitching()
         XCTAssertEqual(-11, store.counter.count)
     }
 }

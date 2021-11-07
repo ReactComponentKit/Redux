@@ -27,6 +27,7 @@
 		4E28A82D2736450E00CB7B7E /* UserStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A82C2736450E00CB7B7E /* UserStoreTests.swift */; };
 		4E28A82F2736588800CB7B7E /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A82E2736588800CB7B7E /* AppStore.swift */; };
 		4E28A8312736594D00CB7B7E /* SSOTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A8302736594D00CB7B7E /* SSOTTests.swift */; };
+		4E93EB882737A952008E08DF /* ContextSwitching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93EB872737A952008E08DF /* ContextSwitching.swift */; };
 		OBJ_26 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* State.swift */; };
 		OBJ_27 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Store.swift */; };
 		OBJ_34 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
@@ -58,6 +59,7 @@
 		4E28A82C2736450E00CB7B7E /* UserStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStoreTests.swift; sourceTree = "<group>"; };
 		4E28A82E2736588800CB7B7E /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		4E28A8302736594D00CB7B7E /* SSOTTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOTTests.swift; sourceTree = "<group>"; };
+		4E93EB872737A952008E08DF /* ContextSwitching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSwitching.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		OBJ_13 /* ReduxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReduxTests.swift; sourceTree = "<group>"; };
 		OBJ_17 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				4E28A82C2736450E00CB7B7E /* UserStoreTests.swift */,
 				4E28A828273631E200CB7B7E /* CounterStoreTests.swift */,
 				4E28A8302736594D00CB7B7E /* SSOTTests.swift */,
+				4E93EB872737A952008E08DF /* ContextSwitching.swift */,
 			);
 			name = ReduxTests;
 			path = Tests/ReduxTests;
@@ -268,6 +271,7 @@
 				4E28A82D2736450E00CB7B7E /* UserStoreTests.swift in Sources */,
 				4E28A82F2736588800CB7B7E /* AppStore.swift in Sources */,
 				4E28A82B2736432100CB7B7E /* UserStore.swift in Sources */,
+				4E93EB882737A952008E08DF /* ContextSwitching.swift in Sources */,
 				4E28A829273631E200CB7B7E /* CounterStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
