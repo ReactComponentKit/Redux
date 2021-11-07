@@ -7,7 +7,7 @@ on:
 
 jobs:
   testing_pr:
-    runs-on: macos-latest
+    runs-on: macos-11
     name: Testing PR
     steps:
       - name: checkout
