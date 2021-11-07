@@ -1,274 +1,95 @@
 //
 //  Store.swift
-//  ReduxApp
+//  Redux
 //
-//  Created by sungcheol.kim on 2021/02/04.
+//  Created by sungcheol.kim on 2021/11/06.
+//  email: skyfe79@gmail.com
+//  github: https://github.com/skyfe79
+//  github: https://github.com/ReactComponentKit
 //
 
 import Foundation
 import Combine
 
-@dynamicMemberLookup
+// @dynamicMemberLookup
 open class Store<S: State>: ObservableObject {
-    @Published
-    public private(set) var state: S
-    private var actions = PassthroughSubject<Action, Never>()
-    private var actionQueue: [Action] = []
-    private let actionQueueMutex = DispatchSemaphore(value: 1)
-    private var actionJobMap: [String: Job<S>] = [:]
-    public let cancellable = CancelBag()
+    private(set) public var state: S
+    private var workListBeforeCommit: [(inout S) -> Void] = []
+    private var workListAfterCommit: [(inout S) -> Void] = []
     
-    // for testing
-    internal var testResultHandler: ((S) -> Swift.Void)?
-    internal var testDequeActionHandler: (() -> Swift.Void)?
-    
-    public init(state: S = S()) {
-        self.state = state
-        self.prepareStore()
-        self.processActions()
-    }
-    
-    public subscript<T>(dynamicMember keyPath: KeyPath<S, T>) -> T {
-        return state[keyPath: keyPath]
-    }
-    
-    public func dispatch(action: Action) {
-        prepare(action: action)
-        actions.send(action)
-    }
-    
-    // Dispatch Implicit Action to the middleware without payload
-    public func dispatch(middleware: @escaping (S, SideEffect<S>) -> Swift.Void) {
-        func makeMiddleware(actionName: String) -> Middleware<S> {
-            return { (state: S, action: Action, sideEffect: @escaping SideEffect<S>) in
-                guard
-                    action is ImplicitAction<Int>,
-                    action.name == actionName
-                else {
-                    return
-                }
-                middleware(state, sideEffect)
-            }
-        }
-        
-        let actionName = "\(Date().timeIntervalSince1970)"
-        let actionJob = Job<S>(middlewares: [
-            makeMiddleware(actionName: actionName)
-        ])
-        let action = ImplicitAction(payload: -1, name: actionName, job: actionJob)
-        dispatch(action: action)
-    }
-    
-    // Dispatch Implicit Action to the middleware with payload
-    public func dispatch<T>(payload: T, middleware: @escaping (S, T, SideEffect<S>) -> Swift.Void) {
-        func makeMiddleware(actionName: String) -> Middleware<S> {
-            return { (state: S, action: Action, sideEffect: @escaping SideEffect<S>) in
-                guard
-                    action is ImplicitAction<T>,
-                    let value: T = action.get()
-                else {
-                    return
-                }
-                middleware(state, value, sideEffect)
-            }
-        }
-        
-        let actionName = "\(Date().timeIntervalSince1970)"
-        let actionJob = Job<S>(middlewares: [
-            makeMiddleware(actionName: actionName)
-        ])
-        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
-        dispatch(action: action)
-    }
-    
-    // Dispatch Implicit Action to the reducer with payload
-    public func dispatch<T>(_ keyPath: WritableKeyPath<S, T>, payload: T, reducer: @escaping (S, T) -> S) {
-        func makeReducer(actionName: String) -> Reducer<S> {
-            return { (state: S, action: Action) -> S in
-                guard
-                    action is ImplicitAction<T>,
-                    action.name == actionName,
-                    let value: T = action.get()
-                else {
-                    return state
-                }
-                return reducer(state, value)
-            }
-        }
-        
-        let actionName = "\(Date().timeIntervalSince1970)"
-        let actionJob = Job<S>(reducers: [
-            makeReducer(actionName: actionName)
-        ]) { (state, newState) in
-            state[keyPath: keyPath] = newState[keyPath: keyPath]
-        }
-        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
-        dispatch(action: action)
-    }
-    
-    public func updateAsync<T>(_ keyPath: WritableKeyPath<S, Async<T>>, payload: Async<T>) {
-        func makeReducer(actionName: String) -> Reducer<S> {
-            return { (state: S, action: Action) -> S in
-                guard
-                    action is ImplicitAction<Async<T>>,
-                    action.name == actionName,
-                    let value: Async<T> = action.get()
-                else {
-                    return state
-                }
-                return state.copy { mutation in
-                    mutation[keyPath: keyPath] = value
-                }
-            }
-        }
-        
-        let actionName = "\(Date().timeIntervalSince1970)"
-        let actionJob = Job<S>(reducers: [
-            makeReducer(actionName: actionName)
-        ]) { (state, newState) in
-            state[keyPath: keyPath] = newState[keyPath: keyPath]
-        }
-        let action = ImplicitAction(payload: payload, name: actionName, job: actionJob)
-        dispatch(action: action)
-    }
-    
-    public func store<STORE: Store<S>>() -> STORE? {
-        return self as? STORE
-    }
-    
-    open func prepareStore() {
-        // Override this function if you need to do some job for preparing store.
-    }
-    
-    open func afterProcessingAction(state: S, action: Action) {
-        // Override this function if need some job after processing action.
-    }
-    
-    private func enqueueAction(action: Action) {
-        actionQueueMutex.wait()
-        defer { actionQueueMutex.signal() }
-        prepare(action: action)
-        if actionQueue.isEmpty {
-            actions.send(action)
-        } else {
-            actionQueue.append(action)
-        }
-    }
-    
-    private func prepare(action: Action) {
-        let job = action.job
-        let actionName = action.name
-        if self.actionJobMap[actionName] != nil {
-            return
-        }
-        if let job = job as? Job<S> {
-            self.actionJobMap[actionName] = job
-        }
-    }
-        
-    private func handleSideEffect() -> Store<S>? {
-        return self
-    }
-    
-    private func processActions() {
-        actions
-            .subscribe(on: DispatchQueue.global())
-            .receive(on: DispatchQueue.global())
-            .sink { [weak self] (action) in
-                guard let strongSelf = self else { return }
-                strongSelf.processMiddlewares(action: action)
-            }
-            .cancel(with: cancellable)
-    }
-    
-    private func processMiddlewares(action: Action) {
-        weak var weakSelf: Store<S>? = self
-        let actionName = action.name
-        
-        guard
-            let strongSelf = weakSelf,
-            let job = strongSelf.actionJobMap[actionName]
-        else {
-            return
-        }
-        
-        job.middlewares.publisher
-            .subscribe(on: DispatchQueue.global())
-            .reduce(strongSelf.state, { [weak strongSelf] s, m in
-                guard let strongSelf = strongSelf else { return s }
-                m(s, action, strongSelf.handleSideEffect)
-                return s
-            })
-            .receive(on: DispatchQueue.global())
-            .sink(receiveCompletion: { _ in
-            }, receiveValue: { [weak strongSelf] _ in
-                guard let strongSelf = strongSelf else { return }
-                strongSelf.processReducers(action: action)
-            })
-            .cancel(with: strongSelf.cancellable)
-    }
-    
-    private func processReducers(action: Action) {
-        weak var weakSelf: Store<S>? = self
-        let actionName = action.name
-        
-        guard
-            let strongSelf = weakSelf,
-            let job = strongSelf.actionJobMap[actionName]
-        else {
-            return
-        }
-        
-        job.reducers
-            .publisher
-            .subscribe(on: DispatchQueue.global())
-            .reduce(strongSelf.state, { newState, reducer in
-                return reducer(newState, action)
-            })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak strongSelf] state in
-                guard let strongSelf = strongSelf else { return }
-                // update state
-                job.onNewState?(&strongSelf.state, state)
-                
-                // do job after procesing action
-                strongSelf.afterProcessingAction(state: state, action: action)
-                
-                // for testing
-                if !job.reducers.isEmpty {
-                    strongSelf.testResultHandler?(strongSelf.state)
-                }
-
-                // queueing actions
-                strongSelf.actionQueueMutex.wait()
-                defer { strongSelf.actionQueueMutex.signal() }
-                if !strongSelf.actionQueue.isEmpty {
-                    strongSelf.actionQueue.forEach {
-                        strongSelf.actions.send($0)
-                    }
-                }
-                strongSelf.actionQueue = []
-            })
-            .cancel(with: strongSelf.cancellable)
-    }
-}
-
-// For testing
-extension Store {
-    internal func reset(with state: S) {
+    public init(state: S) {
         self.state = state
     }
     
-    internal func test(action: Action) {
-        self.dispatch(action: action)
+//
+//    comment it to read state value more explicitly
+//
+//    public subscript<T>(dynamicMember keyPath: KeyPath<S, T>) -> T {
+//        return state[keyPath: keyPath]
+//    }
+//
+    
+    open func worksBeforeCommit() -> [(inout S) -> Void] {
+        return []
     }
     
-    internal func wait(result: @escaping (S) -> Swift.Void) {
-        self.testResultHandler = result
+    open func worksAfterCommit() -> [(inout S) -> Void] {
+        return []
     }
     
-    // calling after assert
-    internal func againTest() {
-        self.testResultHandler?(self.state)
+    private func doWorksBeforeCommit() {
+        if workListBeforeCommit.isEmpty {
+            let works = worksBeforeCommit()
+            if works.isEmpty {
+                return
+            }
+            workListBeforeCommit = works
+        }
+        for work in workListBeforeCommit {
+            work(&self.state)
+        }
+    }
+    
+    private func doWorksAfterCommit() {
+        if workListAfterCommit.isEmpty {
+            let works = worksAfterCommit()
+            if works.isEmpty {
+                return
+            }
+            workListAfterCommit = works
+        }
+        for work in workListAfterCommit {
+            work(&self.state)
+        }
+    }
+    
+    @MainActor
+    private func computeOnMainThread(new: S, old: S) async {
+        if new != old {
+            computed(new: new, old: old)
+        }
+        // when doing works after commit mutation, computed value should be equal to state value.
+        doWorksAfterCommit()
+    }
+    
+    public func commit<P>(mutation: (inout S, P) -> Void, payload: P) {
+        doWorksBeforeCommit()
+        let old = state
+        mutation(&state, payload)
+        Task {
+            await computeOnMainThread(new: state, old: old)
+        }
+    }
+    
+    public func dispatch<P>(action: (Store<S>, P) async -> Void, payload: P) async {
+        await action(self, payload)
+    }
+    
+    public func dispatch<P>(action: (Store<S>, P) -> Void, payload: P) {
+        action(self, payload)
+    }
+    
+    open func computed(new: S, old: S) {
+        // override it
     }
 }

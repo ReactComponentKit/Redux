@@ -1,8 +1,17 @@
+//
+//  CounterStoreTests.swift
+//  ReduxTests
+//
+//  Created by sungcheol.kim on 2021/11/06.
+//  email: skyfe79@gmail.com
+//  github: https://github.com/skyfe79
+//  github: https://github.com/ReactComponentKit
+//
+
 import XCTest
 @testable import Redux
 
 final class CounterStoreTests: XCTestCase {
-    
     private var store: CounterStore!
     
     override func setUp() {
@@ -16,98 +25,47 @@ final class CounterStoreTests: XCTestCase {
     }
     
     func testInitialState() {
-        XCTAssertEqual(0, store.count)
+        XCTAssertEqual(0, store.state.count)
     }
     
     func testIncrementAction() {
-        let test = Test<CounterState>()
-        
-        test
-            .dispatch(action: IncrementAction(payload: 1))
-            .to(store)
-        
-        wait(for: test) { state in
-            XCTAssertEqual(1, state.count)
-        }
+        store.incrementAction(payload: 1)
+        XCTAssertEqual(1, store.state.count)
+        store.incrementAction(payload: 10)
+        XCTAssertEqual(11, store.state.count)
     }
     
-    func testDecrementAction() {
-        let test = Test<CounterState>()
-
-        test
-            .dispatch(action: DecrementAction(payload: 1))
-            .to(store)
-
-        wait(for: test) { state in
-            XCTAssertEqual(-1, state.count)
-        }
-    }
-
-    func testMultipleIncrementActions() {
-        let test = Test<CounterState>()
-
-        test
-            .dispatch(action: IncrementAction(payload: 1))
-            .dispatch(action: IncrementAction(payload: 1))
-            .test { state in
-                XCTAssertEqual(2, state.count)
-            }
-            .dispatch(action: IncrementAction(payload: 1))
-            .dispatch(action: IncrementAction(payload: 1))
-            .dispatch(action: IncrementAction(payload: 1))
-            .to(store)
-
-        wait(for: test) { (state) in
-            XCTAssertEqual(5, state.count)
-        }
-    }
-
-    func testMultipleDecrementActions() {
-        let test = Test<CounterState>()
-
-        test
-            .dispatch(action: DecrementAction(payload: 1))
-            .dispatch(action: DecrementAction(payload: 1))
-            .dispatch(action: DecrementAction(payload: 1))
-            .dispatch(action: DecrementAction(payload: 1))
-            .dispatch(action: DecrementAction(payload: 1))
-            .to(store)
-
-        wait(for: test) { (state) in
-            XCTAssertEqual(-5, state.count)
-        }
-    }
-
-    func testMultipleIncDecActions() {
-        let test = Test<CounterState>()
-        let counterState = CounterState(count: 10)
-        test.reset(store: store!, state: counterState)
-
-        XCTAssertEqual(10, store.count)
-
-        test.dispatch(action: IncrementAction(payload: 1))
-            .dispatch(action: IncrementAction(payload: 2))
-            .dispatch(action: IncrementAction(payload: 3))
-            .test { state in
-                XCTAssertEqual(16, state.count)
-            }
-            .dispatch(action: DecrementAction(payload: 1))
-            .dispatch(action: DecrementAction(payload: 2))
-            .dispatch(action: DecrementAction(payload: 3))
-            .test { state in
-                XCTAssertEqual(10, state.count)
-            }
-            .dispatch(action: IncrementAction(payload: 1))
-            .dispatch(action: DecrementAction(payload: 2))
-            .to(store)
-
-        wait(for: test) { (state) in
-            XCTAssertEqual(9, state.count)
-        }
+    func testPublisherValue() async {
+        XCTAssertEqual(0, store.count)
+        
+        store.incrementAction(payload: 1)
+        await contextSwitching()
+        XCTAssertEqual(1, store.count)
+        
+        store.incrementAction(payload: 10)
+        await contextSwitching()
+        XCTAssertEqual(11, store.count)
+        
+        store.decrementAction(payload: 10)
+        await contextSwitching()
+        XCTAssertEqual(1, store.count)
+        
+        store.decrementAction(payload: 1)
+        await contextSwitching()
+        XCTAssertEqual(0, store.count)
     }
     
-
-    static var allTests = [
-        ("testInitialState", testInitialState),
-    ]
+    func testAsyncIncrementAction() async {
+        await store.asyncIncrementAction(payload: 1)
+        XCTAssertEqual(1, store.state.count)
+        await store.asyncIncrementAction(payload: 10)
+        XCTAssertEqual(11, store.state.count)
+    }
+    
+    func testAsyncDecrementAction() async {
+        await store.asyncDecrementAction(payload: 1)
+        XCTAssertEqual(-1, store.state.count)
+        await store.asyncDecrementAction(payload: 10)
+        XCTAssertEqual(-11, store.state.count)
+    }
 }

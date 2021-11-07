@@ -1,25 +1,14 @@
 //
 //  State.swift
-//  ReduxApp
+//  Redux
 //
-//  Created by sungcheol.kim on 2021/02/04.
+//  Created by sungcheol.kim on 2021/11/06.
+//  email: skyfe79@gmail.com
+//  github: https://github.com/skyfe79
+//  github: https://github.com/ReactComponentKit
 //
 
 import Foundation
 
-public typealias StateMutation<S: State> = (inout S, S) -> Swift.Void
-
-public protocol State {
-    init()
-}
-
-extension State {
-    public func copy(_ mutate: (_ mutableState: inout Self) -> Void) -> Self {
-        var mutableState = self
-        mutate(&mutableState)
-        return mutableState
-    }
-}
-
-internal struct EmptyState: State {
+public protocol State: Equatable {
 }
