@@ -13,7 +13,6 @@ import Combine
 
 // @dynamicMemberLookup
 open class Store<S: State>: ObservableObject {
-    @Published
     private(set) public var state: S
     private var workListBeforeCommit: [(inout S) -> Void] = []
     private var workListAfterCommit: [(inout S) -> Void] = []

@@ -95,7 +95,7 @@ Action을 Store의 메서드로 정의하기 때문에 실제로 Store의 dispat
 
 ## Computed
 
-View 에 연결할 속성을 정의합니다. Store는 state를 Publish 하기 때문에 매번 상태의 모든 속성이 Publish 됩니다. 따라서 상태의 특정 속성만 Publish 하고자할 때, Computed 단계에서 해당 속성에 값을 주입할 수 있습니다.
+View 에 연결할 속성을 정의합니다. Store는 state를 Publish 하지 않습니다. 따라서 상태의 특정 속성을 Publish 하기 위해서, Computed 단계에서 해당 속성에 값을 주입할 수 있습니다.
 
 ```swift
 class CounterStore: Store<Counter> {
