@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+      - name: show sdks
+        run: xcodebuild -showsdks
       - name: testing 
         run: ./test_ios.sh
       - name: building
