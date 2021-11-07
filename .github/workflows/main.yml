@@ -1,0 +1,19 @@
+name: "Testing PR"
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  testing_pr:
+    runs-on: macos-latest
+    name: Testing PR
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: testing 
+        run: ./test_ios.sh
+      - name: building
+        run: ./build_ios.sh
+

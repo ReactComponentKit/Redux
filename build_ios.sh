@@ -1,0 +1,1 @@
+xcodebuild -scheme Redux-Package build -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13'
