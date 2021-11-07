@@ -15,35 +15,13 @@ import Combine
 open class Store<S: State>: ObservableObject {
     @Published
     private(set) public var state: S
-    @Published
-    private var computeObserver: (S, S)?
-    private var cancellables = Set<AnyCancellable>()
+    private var workListBeforeCommit: [(inout S) -> Void] = []
+    private var workListAfterCommit: [(inout S) -> Void] = []
     
     public init(state: S) {
         self.state = state
-        // Combine's Published variable assignment should be on the main thread.
-        self.$computeObserver
-            .receive(on: DispatchQueue.main, options: nil)
-            .sink { [weak self] value in
-                guard
-                    let self = self,
-                    let (new, old) = value
-                else {
-                    return
-                }
-                if new != old {
-                    self.computed(new: new, old: old)
-                }
-                
-                // when doing works after commit mutation, computed value should be equal to state value.
-                self.doWorksAfterCommit()
-            }
-            .store(in: &cancellables)
     }
     
-    private var workListBeforeCommit: [(inout S) -> Void] = []
-    private var workListAfterCommit: [(inout S) -> Void] = []
-
 //
 //    comment it to read state value more explicitly
 //
@@ -86,11 +64,22 @@ open class Store<S: State>: ObservableObject {
         }
     }
     
+    @MainActor
+    private func computeOnMainThread(new: S, old: S) async {
+        if new != old {
+            computed(new: new, old: old)
+        }
+        // when doing works after commit mutation, computed value should be equal to state value.
+        doWorksAfterCommit()
+    }
+    
     public func commit<P>(mutation: (inout S, P) -> Void, payload: P) {
         doWorksBeforeCommit()
         let old = state
         mutation(&state, payload)
-        computeObserver = (state, old)
+        Task {
+            await computeOnMainThread(new: state, old: old)
+        }
     }
     
     public func dispatch<P>(action: (Store<S>, P) async -> Void, payload: P) async {
