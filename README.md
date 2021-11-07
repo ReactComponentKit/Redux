@@ -1,4 +1,4 @@
-[English](./README.md) | [한국어](./README_ko.md)
+[English](https://github.com/ReactComponentKit/Redux/blob/main/README.md) | [한국어](./https://github.com/ReactComponentKit/Redux/blob/main/README_ko.md)
 
 # Redux
 
@@ -8,6 +8,16 @@
 [![Swift 5.5](https://img.shields.io/badge/Swift-5.5-orange.svg?style=flat)](https://developer.apple.com/swift/)
 
 Implementing Redux with async/await introduced in Swift 5.5 has become very simple. From Xcode 13.2, Swift 5.5's new concurrency supports iOS 13. Therefore, the existing Redux package was newly implemented based on async/await.
+
+## Installation
+
+Redux only support Swift Package Manager. 
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/ReactComponentKit/Redux.git", from: "1.0.0"),
+]
+```
 
 ## Flow
 

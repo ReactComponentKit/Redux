@@ -1,3 +1,5 @@
+[English](https://github.com/ReactComponentKit/Redux/blob/main/README.md) | [한국어](./https://github.com/ReactComponentKit/Redux/blob/main/README_ko.md)
+
 # Redux
 
 ![license MIT](https://img.shields.io/cocoapods/l/Redux.svg)
@@ -6,6 +8,16 @@
 [![Swift 5.5](https://img.shields.io/badge/Swift-5.5-orange.svg?style=flat)](https://developer.apple.com/swift/)
 
 Swift 5.5에서 소개된 async/await로 Redux를 구현하는 일이 매우 간소해졌습니다. Xcode 13.2 버전부터는 Swift 5.5의 새로운 Concurrency가 iOS 13을 지원한다고 합니다. 이에 기존의 Redux 패키지를 async/await 를 바탕으로 새로 구현하였습니다.
+
+## 사용하기
+
+Redux only support Swift Package Manager. 
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/ReactComponentKit/Redux.git", from: "1.0.0"),
+]
+```
 
 ## 흐름
 
