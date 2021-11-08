@@ -1,4 +1,4 @@
-[English](https://github.com/ReactComponentKit/Redux/blob/main/README.md) | [한국어](./https://github.com/ReactComponentKit/Redux/blob/main/README_ko.md)
+[English](https://github.com/ReactComponentKit/Redux/blob/main/README.md) | [한국어](https://github.com/ReactComponentKit/Redux/blob/main/README_ko.md)
 
 # Redux
 
