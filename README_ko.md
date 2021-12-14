@@ -3,8 +3,8 @@
 # Redux
 
 ![license MIT](https://img.shields.io/cocoapods/l/Redux.svg)
-![Platform](https://img.shields.io/badge/iOS-%3E%3D%2015.0-green.svg)
-![Platform](https://img.shields.io/badge/macos-%3E%3D%2012.0-green.svg)
+![Platform](https://img.shields.io/badge/iOS-%3E%3D%2013.0-green.svg)
+![Platform](https://img.shields.io/badge/macos-%3E%3D%2010.15-green.svg)
 [![Swift 5.5](https://img.shields.io/badge/Swift-5.5-orange.svg?style=flat)](https://developer.apple.com/swift/)
 
 Swift 5.5에서 소개된 async/await로 Redux를 구현하는 일이 매우 간소해졌습니다. Xcode 13.2 버전부터는 Swift 5.5의 새로운 Concurrency가 iOS 13을 지원한다고 합니다. 이에 기존의 Redux 패키지를 async/await 를 바탕으로 새로 구현하였습니다.
