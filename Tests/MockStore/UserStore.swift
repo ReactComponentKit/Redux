@@ -41,12 +41,39 @@ class UserStore: Store<UserState> {
         }
     }
     
+    private func fetchData(from url: URL) async throws -> Data? {
+        try await withCheckedThrowingContinuation { continuation in
+            URLSession.shared.dataTask(with: url) { data, _, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: data)
+            }.resume()
+        }
+    }
+    
+    private func fetchData(for request: URLRequest) async throws -> Data? {
+        try await withCheckedThrowingContinuation { continuation in
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: data)
+            }.resume()
+        }
+    }
+    
     // actions
     func loadUsers() async {
         do {
-            let (data, _) = try await URLSession.shared.data(from: URL(string: "https://jsonplaceholder.typicode.com/users/")!)
-            let users = try JSONDecoder().decode([User].self, from: data)
-            commit(mutation: SET_USERS, payload: users)
+            if let data = try await fetchData(from: URL(string: "https://jsonplaceholder.typicode.com/users/")!) {
+                let users = try JSONDecoder().decode([User].self, from: data)
+                commit(mutation: SET_USERS, payload: users)
+            } else {
+                commit(mutation: SET_USERS, payload: [])
+            }
         } catch {
             print(#function, error)
             commit(mutation: SET_USERS, payload: [])
@@ -60,8 +87,9 @@ class UserStore: Store<UserState> {
         request.httpBody = params
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let user = try JSONDecoder().decode(User.self, from: data)
-        commit(mutation: SET_USER, payload: user)
+        if let data = try await fetchData(for: request) {
+            let user = try JSONDecoder().decode(User.self, from: data)
+            commit(mutation: SET_USER, payload: user)
+        }
     }
 }

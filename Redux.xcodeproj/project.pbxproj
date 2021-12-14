@@ -9,11 +9,11 @@
 /* Begin PBXAggregateTarget section */
 		"Redux::ReduxPackageTests::ProductTarget" /* ReduxPackageTests */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = OBJ_36 /* Build configuration list for PBXAggregateTarget "ReduxPackageTests" */;
+			buildConfigurationList = OBJ_43 /* Build configuration list for PBXAggregateTarget "ReduxPackageTests" */;
 			buildPhases = (
 			);
 			dependencies = (
-				OBJ_39 /* PBXTargetDependency */,
+				OBJ_46 /* PBXTargetDependency */,
 			);
 			name = ReduxPackageTests;
 			productName = ReduxPackageTests;
@@ -21,29 +21,29 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		4E28A82727362FCA00CB7B7E /* CounterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A82627362FCA00CB7B7E /* CounterStore.swift */; };
-		4E28A829273631E200CB7B7E /* CounterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A828273631E200CB7B7E /* CounterStoreTests.swift */; };
-		4E28A82B2736432100CB7B7E /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A82A2736432100CB7B7E /* UserStore.swift */; };
-		4E28A82D2736450E00CB7B7E /* UserStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A82C2736450E00CB7B7E /* UserStoreTests.swift */; };
-		4E28A82F2736588800CB7B7E /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A82E2736588800CB7B7E /* AppStore.swift */; };
-		4E28A8312736594D00CB7B7E /* SSOTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E28A8302736594D00CB7B7E /* SSOTTests.swift */; };
-		4E93EB882737A952008E08DF /* ContextSwitching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93EB872737A952008E08DF /* ContextSwitching.swift */; };
-		OBJ_26 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* State.swift */; };
-		OBJ_27 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Store.swift */; };
-		OBJ_34 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
-		OBJ_45 /* ReduxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* ReduxTests.swift */; };
-		OBJ_47 /* Redux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Redux::Redux::Product" /* Redux.framework */; };
+		4E83DCC12768B61D00C39A50 /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E83DCBE2768B61D00C39A50 /* UserStore.swift */; };
+		4E83DCC22768B61D00C39A50 /* CounterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E83DCBF2768B61D00C39A50 /* CounterStore.swift */; };
+		4E83DCC32768B61D00C39A50 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E83DCC02768B61D00C39A50 /* AppStore.swift */; };
+		OBJ_33 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* State.swift */; };
+		OBJ_34 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Store.swift */; };
+		OBJ_41 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
+		OBJ_52 /* ContextSwitching.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* ContextSwitching.swift */; };
+		OBJ_53 /* CounterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* CounterStoreTests.swift */; };
+		OBJ_54 /* ReduxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* ReduxTests.swift */; };
+		OBJ_55 /* SSOTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* SSOTTests.swift */; };
+		OBJ_56 /* UserStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* UserStoreTests.swift */; };
+		OBJ_58 /* Redux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Redux::Redux::Product" /* Redux.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4E28A82327362DAB00CB7B7E /* PBXContainerItemProxy */ = {
+		4E83DCBB2768B57200C39A50 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "Redux::Redux";
 			remoteInfo = Redux;
 		};
-		4E28A82427362DAB00CB7B7E /* PBXContainerItemProxy */ = {
+		4E83DCBC2768B57300C39A50 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
@@ -53,19 +53,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4E28A82627362FCA00CB7B7E /* CounterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStore.swift; sourceTree = "<group>"; };
-		4E28A828273631E200CB7B7E /* CounterStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStoreTests.swift; sourceTree = "<group>"; };
-		4E28A82A2736432100CB7B7E /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
-		4E28A82C2736450E00CB7B7E /* UserStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStoreTests.swift; sourceTree = "<group>"; };
-		4E28A82E2736588800CB7B7E /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
-		4E28A8302736594D00CB7B7E /* SSOTTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOTTests.swift; sourceTree = "<group>"; };
-		4E93EB872737A952008E08DF /* ContextSwitching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSwitching.swift; sourceTree = "<group>"; };
+		4E83DCBE2768B61D00C39A50 /* UserStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
+		4E83DCBF2768B61D00C39A50 /* CounterStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterStore.swift; sourceTree = "<group>"; };
+		4E83DCC02768B61D00C39A50 /* AppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
-		OBJ_13 /* ReduxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReduxTests.swift; sourceTree = "<group>"; };
-		OBJ_17 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		OBJ_18 /* build_ios.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_ios.sh; sourceTree = "<group>"; };
-		OBJ_19 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		OBJ_20 /* test_ios.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = test_ios.sh; sourceTree = "<group>"; };
+		OBJ_13 /* ContextSwitching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSwitching.swift; sourceTree = "<group>"; };
+		OBJ_14 /* CounterStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStoreTests.swift; sourceTree = "<group>"; };
+		OBJ_15 /* ReduxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReduxTests.swift; sourceTree = "<group>"; };
+		OBJ_16 /* SSOTTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOTTests.swift; sourceTree = "<group>"; };
+		OBJ_17 /* UserStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStoreTests.swift; sourceTree = "<group>"; };
+		OBJ_22 /* arts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = arts; sourceTree = SOURCE_ROOT; };
+		OBJ_23 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		OBJ_24 /* build_ios.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_ios.sh; sourceTree = "<group>"; };
+		OBJ_25 /* README_ko.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_ko.md; sourceTree = "<group>"; };
+		OBJ_26 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		OBJ_27 /* test_ios.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = test_ios.sh; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		"Redux::Redux::Product" /* Redux.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Redux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,38 +75,39 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		OBJ_28 /* Frameworks */ = {
+		OBJ_35 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_46 /* Frameworks */ = {
+		OBJ_57 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_47 /* Redux.framework in Frameworks */,
+				OBJ_58 /* Redux.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4E28A82527362FB000CB7B7E /* MockStore */ = {
+		4E83DCBD2768B61D00C39A50 /* MockStore */ = {
 			isa = PBXGroup;
 			children = (
-				4E28A82627362FCA00CB7B7E /* CounterStore.swift */,
-				4E28A82A2736432100CB7B7E /* UserStore.swift */,
-				4E28A82E2736588800CB7B7E /* AppStore.swift */,
+				4E83DCBE2768B61D00C39A50 /* UserStore.swift */,
+				4E83DCBF2768B61D00C39A50 /* CounterStore.swift */,
+				4E83DCC02768B61D00C39A50 /* AppStore.swift */,
 			);
-			path = MockStore;
+			name = MockStore;
+			path = Tests/MockStore;
 			sourceTree = "<group>";
 		};
 		OBJ_11 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				4E28A82527362FB000CB7B7E /* MockStore */,
+				4E83DCBD2768B61D00C39A50 /* MockStore */,
 				OBJ_12 /* ReduxTests */,
 			);
 			name = Tests;
@@ -113,17 +116,17 @@
 		OBJ_12 /* ReduxTests */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_13 /* ReduxTests.swift */,
-				4E28A82C2736450E00CB7B7E /* UserStoreTests.swift */,
-				4E28A828273631E200CB7B7E /* CounterStoreTests.swift */,
-				4E28A8302736594D00CB7B7E /* SSOTTests.swift */,
-				4E93EB872737A952008E08DF /* ContextSwitching.swift */,
+				OBJ_13 /* ContextSwitching.swift */,
+				OBJ_14 /* CounterStoreTests.swift */,
+				OBJ_15 /* ReduxTests.swift */,
+				OBJ_16 /* SSOTTests.swift */,
+				OBJ_17 /* UserStoreTests.swift */,
 			);
 			name = ReduxTests;
 			path = Tests/ReduxTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_14 /* Products */ = {
+		OBJ_18 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				"Redux::Redux::Product" /* Redux.framework */,
@@ -132,18 +135,21 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 = {
+		OBJ_5 /*  */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_11 /* Tests */,
-				OBJ_14 /* Products */,
-				OBJ_17 /* LICENSE */,
-				OBJ_18 /* build_ios.sh */,
-				OBJ_19 /* README.md */,
-				OBJ_20 /* test_ios.sh */,
+				OBJ_18 /* Products */,
+				OBJ_22 /* arts */,
+				OBJ_23 /* LICENSE */,
+				OBJ_24 /* build_ios.sh */,
+				OBJ_25 /* README_ko.md */,
+				OBJ_26 /* README.md */,
+				OBJ_27 /* test_ios.sh */,
 			);
+			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -169,10 +175,10 @@
 /* Begin PBXNativeTarget section */
 		"Redux::Redux" /* Redux */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_22 /* Build configuration list for PBXNativeTarget "Redux" */;
+			buildConfigurationList = OBJ_29 /* Build configuration list for PBXNativeTarget "Redux" */;
 			buildPhases = (
-				OBJ_25 /* Sources */,
-				OBJ_28 /* Frameworks */,
+				OBJ_32 /* Sources */,
+				OBJ_35 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -185,15 +191,15 @@
 		};
 		"Redux::ReduxTests" /* ReduxTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_41 /* Build configuration list for PBXNativeTarget "ReduxTests" */;
+			buildConfigurationList = OBJ_48 /* Build configuration list for PBXNativeTarget "ReduxTests" */;
 			buildPhases = (
-				OBJ_44 /* Sources */,
-				OBJ_46 /* Frameworks */,
+				OBJ_51 /* Sources */,
+				OBJ_57 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				OBJ_48 /* PBXTargetDependency */,
+				OBJ_59 /* PBXTargetDependency */,
 			);
 			name = ReduxTests;
 			productName = ReduxTests;
@@ -202,9 +208,9 @@
 		};
 		"Redux::SwiftPMPackageDescription" /* ReduxPackageDescription */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_30 /* Build configuration list for PBXNativeTarget "ReduxPackageDescription" */;
+			buildConfigurationList = OBJ_37 /* Build configuration list for PBXNativeTarget "ReduxPackageDescription" */;
 			buildPhases = (
-				OBJ_33 /* Sources */,
+				OBJ_40 /* Sources */,
 			);
 			buildRules = (
 			);
@@ -230,8 +236,8 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5;
-			productRefGroup = OBJ_14 /* Products */;
+			mainGroup = OBJ_5 /*  */;
+			productRefGroup = OBJ_18 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -244,114 +250,54 @@
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		OBJ_25 /* Sources */ = {
+		OBJ_32 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_26 /* State.swift in Sources */,
-				OBJ_27 /* Store.swift in Sources */,
+				OBJ_33 /* State.swift in Sources */,
+				OBJ_34 /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_33 /* Sources */ = {
+		OBJ_40 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_34 /* Package.swift in Sources */,
+				OBJ_41 /* Package.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_44 /* Sources */ = {
+		OBJ_51 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				4E28A82727362FCA00CB7B7E /* CounterStore.swift in Sources */,
-				4E28A8312736594D00CB7B7E /* SSOTTests.swift in Sources */,
-				OBJ_45 /* ReduxTests.swift in Sources */,
-				4E28A82D2736450E00CB7B7E /* UserStoreTests.swift in Sources */,
-				4E28A82F2736588800CB7B7E /* AppStore.swift in Sources */,
-				4E28A82B2736432100CB7B7E /* UserStore.swift in Sources */,
-				4E93EB882737A952008E08DF /* ContextSwitching.swift in Sources */,
-				4E28A829273631E200CB7B7E /* CounterStoreTests.swift in Sources */,
+				4E83DCC12768B61D00C39A50 /* UserStore.swift in Sources */,
+				OBJ_52 /* ContextSwitching.swift in Sources */,
+				4E83DCC22768B61D00C39A50 /* CounterStore.swift in Sources */,
+				OBJ_53 /* CounterStoreTests.swift in Sources */,
+				OBJ_54 /* ReduxTests.swift in Sources */,
+				OBJ_55 /* SSOTTests.swift in Sources */,
+				OBJ_56 /* UserStoreTests.swift in Sources */,
+				4E83DCC32768B61D00C39A50 /* AppStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		OBJ_39 /* PBXTargetDependency */ = {
+		OBJ_46 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "Redux::ReduxTests" /* ReduxTests */;
-			targetProxy = 4E28A82427362DAB00CB7B7E /* PBXContainerItemProxy */;
+			targetProxy = 4E83DCBC2768B57300C39A50 /* PBXContainerItemProxy */;
 		};
-		OBJ_48 /* PBXTargetDependency */ = {
+		OBJ_59 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "Redux::Redux" /* Redux */;
-			targetProxy = 4E28A82327362DAB00CB7B7E /* PBXContainerItemProxy */;
+			targetProxy = 4E83DCBB2768B57200C39A50 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		OBJ_23 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CURRENT_PROJECT_VERSION = 1;
-				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
-				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = Redux.xcodeproj/Redux_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				OTHER_CFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = Redux;
-				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_VERSION = 5.0;
-				TARGET_NAME = Redux;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
-			};
-			name = Debug;
-		};
-		OBJ_24 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CURRENT_PROJECT_VERSION = 1;
-				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
-				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = Redux.xcodeproj/Redux_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				OTHER_CFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = Redux;
-				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_VERSION = 5.0;
-				TARGET_NAME = Redux;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
-			};
-			name = Release;
-		};
 		OBJ_3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -367,7 +313,7 @@
 					"SWIFT_PACKAGE=1",
 					"DEBUG=1",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -380,33 +326,81 @@
 			};
 			name = Debug;
 		};
-		OBJ_31 /* Debug */ = {
+		OBJ_30 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LD = /usr/bin/true;
-				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/ManifestAPI -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk -package-description-version 5.5.0";
+				CURRENT_PROJECT_VERSION = 1;
+				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Redux.xcodeproj/Redux_Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Redux;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_VERSION = 5.0;
+				TARGET_NAME = Redux;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
-		OBJ_32 /* Release */ = {
+		OBJ_31 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LD = /usr/bin/true;
-				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/ManifestAPI -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk -package-description-version 5.5.0";
+				CURRENT_PROJECT_VERSION = 1;
+				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Redux.xcodeproj/Redux_Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Redux;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_VERSION = 5.0;
+				TARGET_NAME = Redux;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
-		OBJ_37 /* Debug */ = {
+		OBJ_38 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/ManifestAPI -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -package-description-version 5.5.0";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		OBJ_38 /* Release */ = {
+		OBJ_39 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/ManifestAPI -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -package-description-version 5.5.0";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -423,7 +417,7 @@
 					"$(inherited)",
 					"SWIFT_PACKAGE=1",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -435,7 +429,19 @@
 			};
 			name = Release;
 		};
-		OBJ_42 /* Debug */ = {
+		OBJ_44 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		OBJ_45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		OBJ_49 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
@@ -448,9 +454,9 @@
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Redux.xcodeproj/ReduxTests_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
@@ -462,7 +468,7 @@
 			};
 			name = Debug;
 		};
-		OBJ_43 /* Release */ = {
+		OBJ_50 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
@@ -475,9 +481,9 @@
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Redux.xcodeproj/ReduxTests_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
@@ -501,38 +507,38 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		OBJ_22 /* Build configuration list for PBXNativeTarget "Redux" */ = {
+		OBJ_29 /* Build configuration list for PBXNativeTarget "Redux" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_23 /* Debug */,
-				OBJ_24 /* Release */,
+				OBJ_30 /* Debug */,
+				OBJ_31 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		OBJ_30 /* Build configuration list for PBXNativeTarget "ReduxPackageDescription" */ = {
+		OBJ_37 /* Build configuration list for PBXNativeTarget "ReduxPackageDescription" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_31 /* Debug */,
-				OBJ_32 /* Release */,
+				OBJ_38 /* Debug */,
+				OBJ_39 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		OBJ_36 /* Build configuration list for PBXAggregateTarget "ReduxPackageTests" */ = {
+		OBJ_43 /* Build configuration list for PBXAggregateTarget "ReduxPackageTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_37 /* Debug */,
-				OBJ_38 /* Release */,
+				OBJ_44 /* Debug */,
+				OBJ_45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		OBJ_41 /* Build configuration list for PBXNativeTarget "ReduxTests" */ = {
+		OBJ_48 /* Build configuration list for PBXNativeTarget "ReduxTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_42 /* Debug */,
-				OBJ_43 /* Release */,
+				OBJ_49 /* Debug */,
+				OBJ_50 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
