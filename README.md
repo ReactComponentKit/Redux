@@ -80,7 +80,9 @@ private func decrement(counter: inout Counter, payload: Int) {
 
 ## Action
 
-Action is also defined by the store's method. There is no need to create a separate custom data type for action anymore.
+Action is also defined by the store's method. There is no need to create a separate custom data type for action anymore. Since Action is defined as a store method, there are very few cases where the store's dispatch method is actually used. 
+
+Action can be defined by dividing it into Sync Action or Async Action. Since the state change occurs in the commit, there is no need to define additional middleware for asynchronous processing. You can complete asynchronous processing in the async action and then commit the changes.
 
 ```swift
 // actions
@@ -103,8 +105,6 @@ func asyncDecrementAction(payload: Int) async {
 }
 ```
 
-Since Action is defined as a store method, there are very few cases where the store's dispatch method is actually used.
-
 
 ## Computed
 
@@ -116,7 +116,7 @@ class CounterStore: Store<Counter> {
         super.init(state: Counter())
     }
     
-    // refs or computed
+    // computed
     @Published
     var count = 0
     
@@ -144,7 +144,7 @@ class CounterStore: Store<Counter> {
         super.init(state: Counter())
     }
     
-    // refs or computed
+    // computed
     @Published
     var count = 0
     
@@ -183,9 +183,11 @@ class CounterStore: Store<Counter> {
 ```
 
 
-## Middleware
+## Middlewares
 
 You can optionally add middlewares. Middleware is a collection of functions called before or after all Mutations.
+
+You can optionally add Middleware. Middleware is a collection of sync functions called before and after all mutations are commited. For example, you can define middleware that print logs to debug state changes.
 
 ```swift
 class WorksBeforeCommitStore: Store<ReduxState> {
@@ -193,10 +195,10 @@ class WorksBeforeCommitStore: Store<ReduxState> {
         super.init(state: ReduxState())
     }
     
-    override func worksBeforeCommit() -> [(inout ReduxState) -> Void] {
+    override func worksBeforeCommit() -> [(ReduxState) -> Void] {
         return [
-            { (mutableState) in
-                mutableState.count = -10
+            { (state) in
+                print(state.count)
             }
         ]
     }
@@ -207,10 +209,10 @@ class WorksAfterCommitStore: Store<ReduxState> {
         super.init(state: ReduxState())
     }
     
-    override func worksAfterCommit() -> [(inout ReduxState) -> Void] {
+    override func worksAfterCommit() -> [(ReduxState) -> Void] {
         return [
-            { (mutableState) in
-                mutableState.count *= 2
+            { (state) in
+                print(state.count)
             }
         ]
     }

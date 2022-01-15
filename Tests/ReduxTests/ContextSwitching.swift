@@ -10,5 +10,5 @@ import Foundation
 
 /// for testing the computed property
 func contextSwitching() async {
-    await Task.sleep(UInt64(0.1 * 1_000_000_000))
+    try? await Task.sleep(nanoseconds: 1 * 1_000_000_000)
 }

@@ -80,7 +80,7 @@ private func decrement(counter: inout Counter, payload: Int) {
 
 ## Action 정의
 
-Action 도 Store의 메서드로 정의합니다. 더 이상 Action을 위해 따로 struct와 같은 타입을 만들 필요가 없습니다. 
+Action 도 Store의 메서드로 정의합니다. 더 이상 Action을 위해 따로 struct와 같은 타입을 만들 필요가 없습니다. Action을 Store의 메서드로 정의하기 때문에 실제로 Store의 dispatch 메서드를 사용하는 경우는 매우 적습니다. Action은 Sync Action 또는 Async Action으로 나누어 정의할 수 있습니다. 상태 변경은 commit mutation 에서 발생하기 때문에 비동기 처리를 위해서 부가적인 middleware를 정의할 필요가 없습니다. 비동기 액션에서 비동기 처리를 완료한 다음 변경사항을 커밋하면 됩니다.
 
 ```swift
 // actions
@@ -103,8 +103,6 @@ func asyncDecrementAction(payload: Int) async {
 }
 ```
 
-Action을 Store의 메서드로 정의하기 때문에 실제로 Store의 dispatch 메서드를 사용하는 경우는 매우 적습니다.
-
 
 ## Computed
 
@@ -116,7 +114,7 @@ class CounterStore: Store<Counter> {
         super.init(state: Counter())
     }
     
-    // refs or computed
+    // computed
     @Published
     var count = 0
     
@@ -144,7 +142,7 @@ class CounterStore: Store<Counter> {
         super.init(state: Counter())
     }
     
-    // refs or computed
+    // computed
     @Published
     var count = 0
     
@@ -185,7 +183,7 @@ class CounterStore: Store<Counter> {
 
 ## Middleware 정의
 
-선택적으로 Middleware를 추가할 수 있습니다. 미들웨어는 모든 Mutation 전 또는 후에 호출되는 함수 모음입니다.
+선택적으로 Middleware를 추가할 수 있습니다. 미들웨어는 모든 Mutation이 commit되기 전과 후에 호출되는 동기 함수 모음입니다. 예를 들어 상태 변경을 디버깅하기 위해 로그를 출력하는 미들웨어를 정의할 수 있습니다.
 
 ```swift
 class WorksBeforeCommitStore: Store<ReduxState> {
@@ -193,10 +191,10 @@ class WorksBeforeCommitStore: Store<ReduxState> {
         super.init(state: ReduxState())
     }
     
-    override func worksBeforeCommit() -> [(inout ReduxState) -> Void] {
+    override func worksBeforeCommit() -> [(ReduxState) -> Void] {
         return [
-            { (mutableState) in
-                mutableState.count = -10
+            { (state) in
+                print(state.count)
             }
         ]
     }
@@ -207,10 +205,10 @@ class WorksAfterCommitStore: Store<ReduxState> {
         super.init(state: ReduxState())
     }
     
-    override func worksAfterCommit() -> [(inout ReduxState) -> Void] {
+    override func worksAfterCommit() -> [(ReduxState) -> Void] {
         return [
-            { (mutableState) in
-                mutableState.count *= 2
+            { (state) in
+                print(state.count)
             }
         ]
     }
