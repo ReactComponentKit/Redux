@@ -392,7 +392,7 @@ final class UserStoreTests: XCTestCase {
 }
 ```
 
-## Store 조합
+## Store 합성
 
 Single Source of Truth 로 앱 상태를 한 곳에서 관리할 필요가 있습니다. 그럴 때, 한 State에 앱의 모든 State를 정의하는 것은 위험합니다. 그래서 State를 모듈 단위로 나누어서 각 State를 관리하는 Store를 만들어 관리하는 것이 좋습니다. 아래와 같이 AppStore를 정의할 수 있습니다.
 
@@ -498,3 +498,337 @@ final class SSOTTests: XCTestCase {
     }
 }
 ```
+
+## Store 합성 예시
+
+아래처럼 AppState와 AppStore를 구현하면 좋지 않습니다. 상태를 추가하면 할 수록 AppState는 물론 AppStore가 비대해지기 때문입니다.
+
+```swift
+struct AppState: State {
+    var count: Int = 0
+    var content: String? = nil
+    var error: String? = nil
+}
+
+class AppStore: Store<AppState> {
+    init() {
+        super.init(state: AppState())
+    }
+    
+    @Published
+    var count: Int = 0
+    
+    @Published
+    var content: String? = nil
+    
+    @Published
+    var error: String? = nil
+    
+    override func computed(new: AppState, old: AppState) {
+        if (self.count != new.count) {
+            self.count = new.count
+        }
+        
+        if (self.content != new.content) {
+            self.content = new.content
+        }
+        
+        if (self.error != new.error) {
+            self.error = new.error
+        }
+    }
+    
+    override func worksAfterCommit() -> [(AppState) -> Void] {
+        return [ { state in
+            print(state.count)
+        }]
+    }
+    
+    private func INCREMENT(state: inout AppState, payload: Int) {
+        state.count += payload
+    }
+    
+    private func DECREMENT(state: inout AppState, payload: Int) {
+        state.count -= payload
+    }
+    
+    private func SET_CONTENT(state: inout AppState, payload: String) {
+        state.content = payload
+    }
+    
+    private func SET_ERROR(state: inout AppState, payload: String?) {
+        state.error = payload
+    }
+    
+    func incrementAction(payload: Int) {
+        commit(mutation: INCREMENT, payload: payload)
+    }
+    
+    func decrementAction(payload: Int) {
+        commit(mutation: DECREMENT, payload: payload)
+    }
+
+    func fetchContent() async {
+        do {
+            let (data, _) = try await URLSession.shared.data(from: URL(string: "https://www.facebook.com")!)
+            let value = String(data: data, encoding: .utf8) ?? ""
+            commit(mutation: SET_ERROR, payload: nil)
+            commit(mutation: SET_CONTENT, payload: value)
+        } catch {
+            commit(mutation: SET_ERROR, payload: error.localizedDescription)
+        }
+    }
+}
+```
+
+그래서 아래와 같이 상태와 스토어를 관련 있는 것끼리 최대한 작게 나눈 후 나중에 한 곳의 스토어로 합성하는 것이 좋습니다.
+
+```swift
+
+/**
+ * CounterStore.swift
+ */
+struct Counter: State {
+    var count: Int = 0
+}
+
+class CounterStore: Store<Counter> {
+    @Published
+    var count: Int = 0
+    
+    override func computed(new: Counter, old: Counter) {
+        if (self.count != new.count) {
+            self.count = new.count
+        }
+    }
+    
+    init() {
+        super.init(state: Counter())
+    }
+    
+    override func worksAfterCommit() -> [(Counter) -> Void] {
+        return [ { state in
+            print(state.count)
+        }]
+    }
+    
+    private func INCREMENT(state: inout Counter, payload: Int) {
+        state.count += payload
+    }
+    
+    private func DECREMENT(state: inout Counter, payload: Int) {
+        state.count -= payload
+    }
+    
+    func incrementAction(payload: Int) {
+        commit(mutation: INCREMENT, payload: payload)
+    }
+    
+    func decrementAction(payload: Int) {
+        commit(mutation: DECREMENT, payload: payload)
+    }
+}
+
+/**
+ * ContentStore.swift
+ */
+struct Content: State {
+    var value: String? = nil
+    var error: String? = nil
+}
+
+class ContentStore: Store<Content> {
+    @Published
+    var value: String? = nil
+    
+    @Published
+    var error: String? = nil
+    
+    override func computed(new: Content, old: Content) {
+        if (self.value != new.value) {
+            self.value = new.value
+        }
+        
+        if (self.error != new.error) {
+            self.error = new.error
+        }
+    }
+    
+    init() {
+        super.init(state: Content())
+    }
+    
+    override func worksAfterCommit() -> [(Content) -> Void] {
+        return [
+            { state in
+                print(state.value ?? "없음")
+            }
+        ]
+    }
+    
+    private func SET_CONTENT_VALUE(state: inout Content, payload: String) {
+        state.value = payload
+    }
+    
+    private func SET_ERROR(state: inout Content, payload: String?) {
+        state.error = payload
+    }
+    
+    func fetchContentValue() async {
+        do {
+            let (data, _) = try await URLSession.shared.data(from: URL(string: "https://www.facebook.com")!)
+            let value = String(data: data, encoding: .utf8) ?? ""
+            commit(mutation: SET_ERROR, payload: nil)
+            commit(mutation: SET_CONTENT_VALUE, payload: value)
+        } catch {
+            commit(mutation: SET_ERROR, payload: error.localizedDescription)
+        }
+    }
+}
+
+/**
+ * ComposeAppStore.swift
+ */
+struct ComposeAppState: State {
+    // 다른 스토어의 상태에 의존하는 상태입니다.
+    var allLength: String = ""
+}
+
+class ComposeAppStore: Store<ComposeAppState> {
+    var counter = CounterStore();
+    let content = ContentStore();
+    
+    // UI 레이어에서 counter 네임스페이스를 갖는 counter.count로 접근하기 위해서 private로 설정합니다.
+    @Published
+    private var count = 0;
+    
+    @Published
+    private var contentValue: String? = nil;
+    
+    @Published
+    private var error: String? = nil;
+    
+    // 합성 상태의 computed 입니다.
+    @Published
+    var allLength: String? = nil;
+    
+    override func computed(new: ComposeAppState, old: ComposeAppState) {
+        if (new.allLength != old.allLength) {
+            self.allLength = new.allLength
+        }
+    }
+    
+    init() {
+        super.init(state: ComposeAppState())
+        // @Published 체이닝이 필요합니다.
+        counter.$count.assign(to: &self.$count)
+        content.$value.assign(to: &self.$contentValue)
+        content.$error.assign(to: &self.$error)
+    }
+    
+    // 다른 스토어의 상태와 액션에 의존하는 액션 및 상태 mutation을 아래와 같이 예로 들 수 있습니다.
+    private func SET_ALL_LENGTH(state: inout ComposeAppState, payload: String) {
+        state.allLength = payload
+    }
+    func someComposeAction() async {
+        await content.fetchContentValue()
+        commit(mutation: SET_ALL_LENGTH, payload: "counter: \(counter.state.count), content: \(content.state.value?.count ?? 0)")
+    }
+}
+
+/**
+ * ContentView.swift
+ */
+import SwiftUI
+
+struct ContentView: View {
+    
+    @EnvironmentObject
+    private var store: ComposeAppStore
+    
+    var body: some View {
+        
+        VStack {
+            Text("\(store.counter.count)")
+                .font(.title)
+                .bold()
+                .padding()
+            if let error = store.content.error {
+                Text("Error! \(error)")
+            }
+            HStack {
+                Spacer()
+                
+                Button(action: { store.counter.decrementAction(payload: 1) }) {
+                    Text(" - ")
+                        .font(.title)
+                        .bold()
+                }
+                
+                Spacer()
+                
+                Button(action: { store.counter.incrementAction(payload: 1) }) {
+                    Text(" + ")
+                        .font(.title)
+                        .bold()
+                }
+                
+                Spacer()
+                
+            }
+            VStack {
+                Button(action: {
+                    Task {
+                        await store.someComposeAction()
+                    }
+                }) {
+                    Text("All Length")
+                        .bold()
+                        .multilineTextAlignment(.center)
+                }
+                Text(store.allLength ?? "")
+                    .foregroundColor(.red)
+                    .font(.system(size: 12))
+                    .lineLimit(5)
+                
+                Button(action: {
+                    Task {
+                        await store.content.fetchContentValue()
+                    }
+                }) {
+                    Text("Fetch Content")
+                        .bold()
+                        .multilineTextAlignment(.center)
+                }
+                Text(store.content.value ?? "")
+                    .foregroundColor(.red)
+                    .font(.system(size: 12))
+                    .lineLimit(5)
+            }
+        }
+        .padding(.horizontal, 100)
+    }
+}
+```
+
+## MIT License
+
+Copyright (c) 2021 Redux, ReactComponentKit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
