@@ -14,8 +14,8 @@ import Combine
 // @dynamicMemberLookup
 open class Store<S: State>: ObservableObject {
     private(set) public var state: S
-    private var workListBeforeCommit: [(inout S) -> Void] = []
-    private var workListAfterCommit: [(inout S) -> Void] = []
+    private var workListBeforeCommit: [(S) -> Void] = []
+    private var workListAfterCommit: [(S) -> Void] = []
     
     public init(state: S) {
         self.state = state
@@ -28,12 +28,12 @@ open class Store<S: State>: ObservableObject {
 //        return state[keyPath: keyPath]
 //    }
 //
-    
-    open func worksBeforeCommit() -> [(inout S) -> Void] {
+  
+    open func worksBeforeCommit() -> [(S) -> Void] {
         return []
     }
     
-    open func worksAfterCommit() -> [(inout S) -> Void] {
+    open func worksAfterCommit() -> [(S) -> Void] {
         return []
     }
     
@@ -46,7 +46,7 @@ open class Store<S: State>: ObservableObject {
             workListBeforeCommit = works
         }
         for work in workListBeforeCommit {
-            work(&self.state)
+            work(self.state)
         }
     }
     
@@ -59,7 +59,7 @@ open class Store<S: State>: ObservableObject {
             workListAfterCommit = works
         }
         for work in workListAfterCommit {
-            work(&self.state)
+            work(self.state)
         }
     }
     
@@ -68,14 +68,13 @@ open class Store<S: State>: ObservableObject {
         if new != old {
             computed(new: new, old: old)
         }
-        // when doing works after commit mutation, computed value should be equal to state value.
-        doWorksAfterCommit()
     }
     
     public func commit<P>(mutation: (inout S, P) -> Void, payload: P) {
         doWorksBeforeCommit()
         let old = state
         mutation(&state, payload)
+        doWorksAfterCommit()
         Task {
             await computeOnMainThread(new: state, old: old)
         }

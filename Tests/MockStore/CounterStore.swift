@@ -47,12 +47,12 @@ class CounterStore: Store<Counter> {
     }
     
     func asyncIncrementAction(payload: Int) async {
-        await Task.sleep(1 * 1_000_000_000)
+        try? await Task.sleep(nanoseconds: 1 * 1_000_000_000)
         self.commit(mutation: increment, payload: payload)
     }
     
     func asyncDecrementAction(payload: Int) async {
-        await Task.sleep(1 * 1_000_000_000)
+        try? await Task.sleep(nanoseconds: 1 * 1_000_000_000)
         self.commit(mutation: decrement, payload: payload)
     }
 }

@@ -29,11 +29,11 @@ class WorksBeforeCommitStore: Store<ReduxState> {
     init() {
         super.init(state: ReduxState())
     }
-    
-    override func worksBeforeCommit() -> [(inout ReduxState) -> Void] {
+
+    override func worksBeforeCommit() -> [(ReduxState) -> Void] {
         return [
-            { (mutableState) in
-                mutableState.count = -10
+            { (state) in
+                print(state.count)
             }
         ]
     }
@@ -43,11 +43,11 @@ class WorksAfterCommitStore: Store<ReduxState> {
     init() {
         super.init(state: ReduxState())
     }
-    
-    override func worksAfterCommit() -> [(inout ReduxState) -> Void] {
+
+    override func worksAfterCommit() -> [(ReduxState) -> Void] {
         return [
-            { (mutableState) in
-                mutableState.count *= 2
+            { (state) in
+                print(state.count)
             }
         ]
     }
@@ -84,7 +84,7 @@ final class ReduxTests: XCTestCase {
     
     func testDispatchAsync() async {
         await store.dispatch(action: { store, payload in
-            await Task.sleep(1 * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: 1 * 1_000_000_000)
             store.commit(mutation: { mutableState, number in
                 mutableState.count += number
             }, payload: payload * 2)
@@ -97,27 +97,26 @@ final class ReduxTests: XCTestCase {
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
         }, payload: 1)
-        XCTAssertNotEqual(1, store.state.count)
+        XCTAssertEqual(1, store.state.count)
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
         }, payload: 1)
-        XCTAssertNotEqual(2, store.state.count)
-        XCTAssertEqual(-9, store.state.count)
+        XCTAssertEqual(2, store.state.count)
     }
-    
+
     func testWorksAfterCommit() async {
         let store = WorksAfterCommitStore()
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
-        }, payload: 1) // 1 * 2 = 2
+        }, payload: 1)
         await contextSwitching()
-        XCTAssertEqual(2, store.state.count)
-        
+        XCTAssertEqual(1, store.state.count)
+
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
-        }, payload: 1) // 3 * 2 = 6
+        }, payload: 1)
         await contextSwitching()
-        XCTAssertEqual(6, store.state.count)
+        XCTAssertEqual(2, store.state.count)
     }
     
     func testComputed() async {
