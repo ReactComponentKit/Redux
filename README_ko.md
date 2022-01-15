@@ -12,11 +12,11 @@ Swift 5.5에서 소개된 async/await로 Redux를 구현하는 일이 매우 간
 
 ## 사용하기
 
-Redux only support Swift Package Manager. 
+Swift 패키지 매니저로 Redux 패키지를 설치할 수 있습니다. CocoaPods는 지원하지 않습니다.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ReactComponentKit/Redux.git", from: "1.1.0"),
+    .package(url: "https://github.com/ReactComponentKit/Redux.git", from: "1.2.0"),
 ]
 ```
 
