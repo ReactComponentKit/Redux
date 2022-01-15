@@ -695,7 +695,7 @@ struct ComposeAppState: State {
 }
 
 class ComposeAppStore: Store<ComposeAppState> {
-    var counter = CounterStore();
+    let counter = CounterStore();
     let content = ContentStore();
     
     // UI 레이어에서 counter 네임스페이스를 갖는 counter.count로 접근하기 위해서 private로 설정합니다.

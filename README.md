@@ -699,7 +699,7 @@ struct ComposeAppState: State {
 }
 
 class ComposeAppStore: Store<ComposeAppState> {
-    var counter = CounterStore();
+    let counter = CounterStore();
     let content = ContentStore();
     
     // Set it to private to access counter.count with the counter namespace in the UI layer.
