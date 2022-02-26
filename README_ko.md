@@ -103,6 +103,37 @@ func asyncDecrementAction(payload: Int) async {
 }
 ```
 
+또한 `commit(mutation:payload:)` 메서드 대신에 `commit(mutation:)` 메서드를 사용하여 액션을 정의하거나 상태를 수정할 수 있습니다.
+
+```swift
+func asyncIncrementAction(payload: Int) async {
+    await Task.sleep(1 * 1_000_000_000)
+    self.commit { mutableState in 
+        mutableState.count += 1
+    }
+}
+```
+
+스토어의 `commit` 메서드는 public 입니다. 따라서 아래와 같이 UI 레이어에서 바로 상태를 수정하는 액션을 실행할 수 있습니다.
+
+```swift
+Button(action: { store.counter.commit { $0.count += 1 }) {
+    Text(" + ")
+        .font(.title)
+        .bold()
+}
+```
+
+아니면 스토어의 액션 메서드를 실행해도 됩니다.
+
+```swift
+Button(action: { store.counter.incrementAction(payload: 1) }) {
+    Text(" + ")
+        .font(.title)
+        .bold()
+}
+```
+
 
 ## Computed
 

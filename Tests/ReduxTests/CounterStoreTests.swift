@@ -68,4 +68,22 @@ final class CounterStoreTests: XCTestCase {
         await store.asyncDecrementAction(payload: 10)
         XCTAssertEqual(-11, store.state.count)
     }
+    
+    func testCommitWithClosure() async {
+        XCTAssertEqual(0, store.count)
+        
+        store.commit { state in
+            state.count += 100
+        }
+        XCTAssertEqual(100, store.state.count)
+        await contextSwitching()
+        XCTAssertEqual(100, store.count)
+        
+        store.commit { state in
+            state.count -= 10
+        }
+        XCTAssertEqual(90, store.state.count)
+        await contextSwitching()
+        XCTAssertEqual(90, store.count)
+    }
 }
