@@ -80,6 +80,16 @@ open class Store<S: State>: ObservableObject {
         }
     }
     
+    public func commit(mutation: (inout S) -> Void) {
+        doWorksBeforeCommit()
+        let old = state
+        mutation(&state)
+        doWorksAfterCommit()
+        Task {
+            await computeOnMainThread(new: state, old: old)
+        }
+    }
+    
     public func dispatch<P>(action: (Store<S>, P) async -> Void, payload: P) async {
         await action(self, payload)
     }

@@ -16,7 +16,7 @@ Redux only support Swift Package Manager.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ReactComponentKit/Redux.git", from: "1.2.0"),
+    .package(url: "https://github.com/ReactComponentKit/Redux.git", from: "1.2.1"),
 ]
 ```
 
@@ -102,6 +102,37 @@ func asyncIncrementAction(payload: Int) async {
 func asyncDecrementAction(payload: Int) async {
     await Task.sleep(1 * 1_000_000_000)
     self.commit(mutation: decrement, payload: payload)
+}
+```
+
+Also, You can use simplified commit method to define action or mutate state.
+
+```swift
+func asyncIncrementAction(payload: Int) async {
+    await Task.sleep(1 * 1_000_000_000)
+    self.commit { mutableState in 
+        mutableState.count += 1
+    }
+}
+```
+
+Store's `commit` method is public so you can use it on the UI layer.
+
+```swift
+Button(action: { store.counter.commit { $0.count += 1 }) {
+    Text(" + ")
+        .font(.title)
+        .bold()
+}
+```
+
+or use store's action method.
+
+```swift
+Button(action: { store.counter.incrementAction(payload: 1) }) {
+    Text(" + ")
+        .font(.title)
+        .bold()
 }
 ```
 

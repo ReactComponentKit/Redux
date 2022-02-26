@@ -66,11 +66,18 @@ final class ReduxTests: XCTestCase {
         store = nil
     }
     
-    func testCommit() {
+    func testCommitWithPayload() {
         store.commit(mutation: { mutableState, number in
             mutableState.count += number
         }, payload: 10)
         XCTAssertEqual(10, store.state.count)
+    }
+    
+    func testCommitWithClosure() {
+        store.commit { mutableState in
+            mutableState.count += 99
+        }
+        XCTAssertEqual(99, store.state.count)
     }
     
     func testDispatchSync() {
