@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4E2B9AA427FF0870000C6E9C /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2B9AA327FF0870000C6E9C /* Async.swift */; };
+		4E2B9AA727FF0C6C000C6E9C /* AsyncEnumTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2B9AA527FF0BCB000C6E9C /* AsyncEnumTypeTests.swift */; };
 		4E83DCC12768B61D00C39A50 /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E83DCBE2768B61D00C39A50 /* UserStore.swift */; };
 		4E83DCC22768B61D00C39A50 /* CounterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E83DCBF2768B61D00C39A50 /* CounterStore.swift */; };
 		4E83DCC32768B61D00C39A50 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E83DCC02768B61D00C39A50 /* AppStore.swift */; };
@@ -53,6 +55,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E2B9AA327FF0870000C6E9C /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		4E2B9AA527FF0BCB000C6E9C /* AsyncEnumTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncEnumTypeTests.swift; sourceTree = "<group>"; };
 		4E83DCBE2768B61D00C39A50 /* UserStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
 		4E83DCBF2768B61D00C39A50 /* CounterStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterStore.swift; sourceTree = "<group>"; };
 		4E83DCC02768B61D00C39A50 /* AppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_13 /* ContextSwitching.swift */,
+				4E2B9AA527FF0BCB000C6E9C /* AsyncEnumTypeTests.swift */,
 				OBJ_14 /* CounterStoreTests.swift */,
 				OBJ_15 /* ReduxTests.swift */,
 				OBJ_16 /* SSOTTests.swift */,
@@ -135,7 +140,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -149,7 +154,6 @@
 				OBJ_26 /* README.md */,
 				OBJ_27 /* test_ios.sh */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -165,6 +169,7 @@
 			children = (
 				OBJ_9 /* State.swift */,
 				OBJ_10 /* Store.swift */,
+				4E2B9AA327FF0870000C6E9C /* Async.swift */,
 			);
 			name = Redux;
 			path = Sources/Redux;
@@ -236,7 +241,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_18 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -255,6 +260,7 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_33 /* State.swift in Sources */,
+				4E2B9AA427FF0870000C6E9C /* Async.swift in Sources */,
 				OBJ_34 /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,6 +278,7 @@
 			buildActionMask = 0;
 			files = (
 				4E83DCC12768B61D00C39A50 /* UserStore.swift in Sources */,
+				4E2B9AA727FF0C6C000C6E9C /* AsyncEnumTypeTests.swift in Sources */,
 				OBJ_52 /* ContextSwitching.swift in Sources */,
 				4E83DCC22768B61D00C39A50 /* CounterStore.swift in Sources */,
 				OBJ_53 /* CounterStoreTests.swift in Sources */,
